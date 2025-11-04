@@ -25,6 +25,7 @@
 
 ### BUG FIXES
 
+- [\#794](https://github.com/cosmos/evm/pull/794) Fix mempool.max-txs flag not using desired default of 0
 - [\#748](https://github.com/cosmos/evm/pull/748) Fix DynamicFeeChecker in Cosmos ante handler to respect NoBaseFee feemarkets' parameter.
 - [\#766](https://github.com/cosmos/evm/pull/766) Align gas estimation logic with go-ethereum v1.16.3
 - [\#769](https://github.com/cosmos/evm/pull/769) Fix erc20 ibc middleware to not to validate sender address format.
