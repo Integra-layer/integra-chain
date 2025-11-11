@@ -31,6 +31,10 @@
 - [\#769](https://github.com/cosmos/evm/pull/769) Fix erc20 ibc middleware to not to validate sender address format.
 - [\#756](https://github.com/cosmos/evm/pull/756) Fix error message typo in NewMsgCancelProposal.
 - [\#772](https://github.com/cosmos/evm/pull/772) Avoid panic on close if evm mempool not used.
+- [\#774](https://github.com/cosmos/evm/pull/774) Emit proper allowance amount in erc20 event.
+- [\#790](https://github.com/cosmos/evm/pull/790) fix panic in historical query due to missing EvmCoinInfo.
+- [\#800](https://github.com/cosmos/evm/pull/800) Fix denom exponent validation in virtual fee deduct in vm module.
+- [\#816](https://github.com/cosmos/evm/pull/816) Avoid nil pointer when RPC requests execute before evmCoinInfo initialization in PreBlock with defaultEvmCoinInfo fallback.
 
 ## v0.5.0
 
