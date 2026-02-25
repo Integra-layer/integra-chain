@@ -1,0 +1,12 @@
+package eip7702
+
+import (
+	"testing"
+
+	"github.com/Integra-layer/integra-chain/integra/tests/integration"
+	"github.com/cosmos/evm/tests/integration/eip7702"
+)
+
+func TestEIP7702IntegrationTestSuite(t *testing.T) {
+	eip7702.TestEIP7702IntegrationTestSuite(t, integration.CreateEvmd)
+}
