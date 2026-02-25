@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Integra Layer | Chain Specification",
-  description: "The complete technical specification and identity card for the Integra Layer blockchain — an EVM-compatible Cosmos SDK chain.",
-  icons: { icon: "/favicon.ico" },
+  description: "The complete technical specification and identity card for the Integra Layer blockchain.",
+  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
