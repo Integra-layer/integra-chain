@@ -278,7 +278,7 @@ bool success = staking.createValidator(
 StakingI staking = StakingI(STAKING_PRECOMPILE_ADDRESS);
 
 // Delegate 100 tokens to a validator
-string memory validatorAddr = "evmosvaloper1..."; // Bech32 validator address
+string memory validatorAddr = "integravaloper1..."; // Bech32 validator address
 bool success = staking.delegate(msg.sender, validatorAddr, 100e18);
 
 // Query delegation
@@ -292,7 +292,7 @@ bool success = staking.delegate(msg.sender, validatorAddr, 100e18);
 int64 completionTime = staking.undelegate(msg.sender, validatorAddr, 50e18);
 
 // Redelegate to another validator (no unbonding period)
-string memory newValidator = "evmosvaloper2...";
+string memory newValidator = "integravaloper2...";
 int64 redelegationTime = staking.redelegate(
     msg.sender,
     validatorAddr,

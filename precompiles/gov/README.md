@@ -197,7 +197,7 @@ IGov gov = IGov(GOV_PRECOMPILE_ADDRESS);
 
 // Submit a proposal with initial deposit
 Coin[] memory initialDeposit = new Coin[](1);
-initialDeposit[0] = Coin({denom: "aevmos", amount: 1000000000000000000}); // 1 token
+initialDeposit[0] = Coin({denom: "airl", amount: 1000000000000000000}); // 1 token
 
 bytes memory proposalJSON = '{"messages":[...],"metadata":"...","title":"...","summary":"..."}';
 uint64 proposalId = gov.submitProposal(msg.sender, proposalJSON, initialDeposit);
@@ -207,7 +207,7 @@ gov.vote(msg.sender, proposalId, VoteOption.Yes, "Supporting this proposal");
 
 // Add additional deposit
 Coin[] memory additionalDeposit = new Coin[](1);
-additionalDeposit[0] = Coin({denom: "aevmos", amount: 500000000000000000}); // 0.5 token
+additionalDeposit[0] = Coin({denom: "airl", amount: 500000000000000000}); // 0.5 token
 gov.deposit(msg.sender, proposalId, additionalDeposit);
 
 // Query proposal status

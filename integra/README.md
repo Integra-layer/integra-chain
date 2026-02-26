@@ -63,7 +63,7 @@ Integra Layer is an EVM-compatible blockchain built on the Cosmos SDK using the 
 ### EVM
 - **Precompiles**: All available static precompiles enabled
 - **Preinstalls**: Default preinstalls enabled
-- **ERC20 Token Pairs**: Native token pair + WEVMOS precompile
+- **ERC20 Token Pairs**: Native token pair + WIRL precompile
 
 ## Cosmos SDK Modules
 
