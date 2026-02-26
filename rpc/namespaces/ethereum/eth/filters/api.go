@@ -148,7 +148,7 @@ func (api *PublicFilterAPI) NewPendingTransactionFilter() rpc.ID {
 	defer api.filtersMu.Unlock()
 
 	if len(api.filters) >= int(api.backend.RPCFilterCap()) {
-		return rpc.ID("error creating pending tx filter: max limit reached")
+		return rpc.ID("")
 	}
 
 	id := rpc.NewID()
@@ -171,7 +171,7 @@ func (api *PublicFilterAPI) NewBlockFilter() rpc.ID {
 	defer api.filtersMu.Unlock()
 
 	if len(api.filters) >= int(api.backend.RPCFilterCap()) {
-		return rpc.ID("error creating block filter: max limit reached")
+		return rpc.ID("")
 	}
 
 	id := rpc.NewID()

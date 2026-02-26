@@ -165,7 +165,9 @@ func (b *Backend) GetTransactionReceipt(hash common.Hash) (map[string]interface{
 			// Exponential backoff: 50ms, 100ms, 200ms
 			delay := time.Duration(1<<attempt) * baseDelay
 			b.Logger.Debug("tx not found, retrying", "hash", hexTx, "attempt", attempt+1, "delay", delay)
-			time.Sleep(delay)
+			select {
+			case <-time.After(delay):
+			}
 		}
 	}
 
@@ -195,7 +197,7 @@ func (b *Backend) GetTransactionReceipt(hash common.Hash) (map[string]interface{
 	ethMsg := tx.GetMsgs()[res.MsgIndex].(*evmtypes.MsgEthereumTx)
 	receipts, err := b.ReceiptsFromCometBlock(resBlock, blockRes, []*evmtypes.MsgEthereumTx{ethMsg})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get receipts from comet block")
+		return nil, fmt.Errorf("failed to get receipts from comet block: %w", err)
 	}
 
 	var signer ethtypes.Signer
