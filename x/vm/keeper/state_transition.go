@@ -475,9 +475,7 @@ func (k *Keeper) ApplyMessageWithConfig(
 		if stateDB.GetNonce(sender.Address()) == msg.Nonce {
 			stateDB.SetNonce(sender.Address(), msg.Nonce+1, tracing.NonceChangeContractCreator)
 		}
-		if vmErr == nil {
-			span.AddEvent("contract_creation", trace.WithAttributes(attribute.String("contract_address", contractAddr.String())))
-		}
+		_ = contractAddr // used by upstream tracing; kept for minimal diff
 	} else {
 		// Apply EIP-7702 authorizations.
 		if msg.SetCodeAuthorizations != nil {

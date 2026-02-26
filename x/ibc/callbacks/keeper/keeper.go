@@ -426,7 +426,12 @@ func (k ContractKeeper) IBCOnTimeoutPacketCallback(
 	cachedCtx = evmante.BuildEvmExecutionCtx(cachedCtx).
 		WithGasMeter(evmtypes.NewInfiniteGasMeterWithLimit(cbData.CommitGasLimit))
 
-	res, err := k.evmKeeper.CallEVM(cachedCtx, callbacksabi.ABI, sender, contractAddr, true, math.NewIntFromUint64(cachedCtx.GasMeter().GasRemaining()).BigInt(), "onPacketTimeout",
+	abi, err := callbacksabi.LoadABI()
+	if err != nil {
+		return err
+	}
+
+	res, err := k.evmKeeper.CallEVM(cachedCtx, *abi, sender, contractAddr, true, math.NewIntFromUint64(cachedCtx.GasMeter().GasRemaining()).BigInt(), "onPacketTimeout",
 		packet.GetSourceChannel(), packet.GetSourcePort(), packet.GetSequence(), packet.GetData())
 	if err != nil {
 		return errorsmod.Wrapf(types.ErrCallbackFailed, "EVM returned error: %s", err.Error())
