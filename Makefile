@@ -14,13 +14,13 @@ COMMIT := $(shell git log -1 --format='%H')
 
 BINDIR ?= $(GOPATH)/bin
 BUILDDIR ?= $(CURDIR)/build
-EXAMPLE_BINARY := evmd
+EXAMPLE_BINARY := intgd
 
 ###############################################################################
 ###                              Repo Info                                  ###
 ###############################################################################
 
-HTTPS_GIT := https://github.com/cosmos/evm.git
+HTTPS_GIT := https://github.com/Integra-layer/integra-chain.git
 DOCKER := $(shell which docker)
 
 export GO111MODULE = on
@@ -29,9 +29,9 @@ export GO111MODULE = on
 ###                            Submodule Settings                           ###
 ###############################################################################
 
-# evmd is a separate module under ./evmd
-EVMD_DIR      := evmd
-EVMD_MAIN_PKG := ./cmd/evmd
+# integra is a separate module under ./integra
+INTEGRA_DIR   := integra
+INTEGRA_MAIN_PKG := ./cmd/intgd
 
 ###############################################################################
 ###                        Build & Install evmd                             ###
@@ -89,9 +89,9 @@ endif
 
 # Build into $(BUILDDIR)
 build: go.sum $(BUILDDIR)/
-	@echo "🏗️  Building evmd to $(BUILDDIR)/$(EXAMPLE_BINARY) ..."
-	@cd $(EVMD_DIR) && CGO_ENABLED="1" \
-	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/$(EXAMPLE_BINARY) $(EVMD_MAIN_PKG)
+	@echo "🏗️  Building intgd to $(BUILDDIR)/$(EXAMPLE_BINARY) ..."
+	@cd $(INTEGRA_DIR) && CGO_ENABLED="1" \
+	  go build $(BUILD_FLAGS) -o $(BUILDDIR)/$(EXAMPLE_BINARY) $(INTEGRA_MAIN_PKG)
 
 # Cross-compile for Linux AMD64
 build-linux:
@@ -99,9 +99,9 @@ build-linux:
 
 # Install into $(BINDIR)
 install: go.sum
-	@echo "🚚  Installing evmd to $(BINDIR) ..."
-	@cd $(EVMD_DIR) && CGO_ENABLED="1" \
-	  go install $(BUILD_FLAGS) $(EVMD_MAIN_PKG)
+	@echo "🚚  Installing intgd to $(BINDIR) ..."
+	@cd $(INTEGRA_DIR) && CGO_ENABLED="1" \
+	  go install $(BUILD_FLAGS) $(INTEGRA_MAIN_PKG)
 
 $(BUILDDIR)/:
 	mkdir -p $(BUILDDIR)/
@@ -129,13 +129,13 @@ vulncheck:
 
 PACKAGES_NOSIMULATION=$(shell go list ./... | grep -v '/simulation')
 PACKAGES_UNIT := $(shell go list ./... | grep -v '/tests/e2e$$' | grep -v '/simulation')
-PACKAGES_EVMD := $(shell cd evmd && go list ./... | grep -v '/simulation')
+PACKAGES_INTEGRA := $(shell cd integra && go list ./... | grep -v '/simulation')
 COVERPKG_EVM  := $(shell go list ./... | grep -v '/tests/e2e$$' | grep -v '/simulation' | paste -sd, -)
 COVERPKG_ALL  := $(COVERPKG_EVM)
 COMMON_COVER_ARGS := -timeout=15m -covermode=atomic
 
 TEST_PACKAGES := ./...
-TEST_TARGETS := test-unit test-evmd test-unit-cover test-race
+TEST_TARGETS := test-unit test-integra test-unit-cover test-race
 
 test-unit: ARGS=-timeout=15m
 test-unit: TEST_PACKAGES=$(PACKAGES_UNIT)
@@ -145,19 +145,19 @@ test-race: ARGS=-race
 test-race: TEST_PACKAGES=$(PACKAGES_UNIT)
 test-race: run-tests
 
-test-evmd: ARGS=-timeout=15m
-test-evmd:
-	@cd evmd && go test -race -tags=test -mod=readonly $(ARGS) $(EXTRA_ARGS) $(PACKAGES_EVMD)
+test-integra: ARGS=-timeout=15m
+test-integra:
+	@cd integra && go test -race -tags=test -mod=readonly $(ARGS) $(EXTRA_ARGS) $(PACKAGES_INTEGRA)
 
 test-unit-cover: ARGS=-timeout=15m -coverprofile=coverage.txt -covermode=atomic
 test-unit-cover: TEST_PACKAGES=$(PACKAGES_UNIT)
 test-unit-cover: run-tests
 	@echo "🔍 Running evm (root) coverage..."
 	@go test -race -tags=test $(COMMON_COVER_ARGS) -coverpkg=$(COVERPKG_ALL) -coverprofile=coverage.txt ./...
-	@echo "🔍 Running evmd coverage..."
-	@cd evmd && go test -race -tags=test $(COMMON_COVER_ARGS) -coverpkg=$(COVERPKG_ALL) -coverprofile=coverage_evmd.txt ./...
-	@echo "🔀 Merging evmd coverage into root coverage..."
-	@tail -n +2 evmd/coverage_evmd.txt >> coverage.txt && rm evmd/coverage_evmd.txt
+	@echo "🔍 Running integra coverage..."
+	@cd integra && go test -race -tags=test $(COMMON_COVER_ARGS) -coverpkg=$(COVERPKG_ALL) -coverprofile=coverage_integra.txt ./...
+	@echo "🔀 Merging integra coverage into root coverage..."
+	@tail -n +2 integra/coverage_integra.txt >> coverage.txt && rm integra/coverage_integra.txt
 	@echo "🧹 Filtering ignored files from coverage.txt..."
 	@grep -v -E '/cmd/|/client/|/proto/|/testutil/|/mocks/|/test_.*\.go:|\.pb\.go:|\.pb\.gw\.go:|/x/[^/]+/module\.go:|/scripts/|/ibc/testing/|/version/|\.md:|\.pulsar\.go:' coverage.txt > tmp_coverage.txt && mv tmp_coverage.txt coverage.txt
 	@echo "📊 Coverage summary:"
@@ -168,8 +168,8 @@ test: test-unit
 test-all:
 	@echo "🔍 Running evm module tests..."
 	@go test -race -tags=test -mod=readonly -timeout=15m $(PACKAGES_NOSIMULATION)
-	@echo "🔍 Running evmd module tests..."
-	@cd evmd && go test -race -tags=test -mod=readonly -timeout=15m $(PACKAGES_EVMD)
+	@echo "🔍 Running integra module tests..."
+	@cd integra && go test -race -tags=test -mod=readonly -timeout=15m $(PACKAGES_INTEGRA)
 
 run-tests:
 ifneq (,$(shell which tparse 2>/dev/null))

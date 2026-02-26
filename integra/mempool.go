@@ -38,7 +38,6 @@ func (app *IntegraApp) configureEVMMempool(appOpts servertypes.AppOptions, logge
 		app.EVMKeeper,
 		app.FeeMarketKeeper,
 		app.txConfig,
-		app.clientCtx,
 		mempoolConfig,
 		cosmosPoolMaxTx,
 	)
