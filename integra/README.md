@@ -93,3 +93,30 @@ This directory was forked from the `evmd/` example chain in cosmos/evm v0.5.1 wi
 - **Home Dir**: `.evmd` -> `.intgd`
 - **Config**: All genesis parameters customized (see above)
 - **New files**: `integra_config.go` (constants + helpers), `integra_config_test.go`, `genesis_test.go`
+
+## Network Endpoints
+
+| Service | Mainnet | Testnet |
+|---------|---------|---------|
+| RPC | `https://mainnet.integralayer.com/rpc` | `https://testnet.integralayer.com/rpc` |
+| REST | `https://mainnet.integralayer.com/api` | `https://testnet.integralayer.com/api` |
+| EVM JSON-RPC | `https://mainnet.integralayer.com/evm` | `https://testnet.integralayer.com/evm` |
+| WebSocket | `wss://mainnet.integralayer.com/ws` | `wss://testnet.integralayer.com/ws` |
+| Blockscout | `https://blockscout.integralayer.com` | `https://testnet.blockscout.integralayer.com` |
+| Explorer | [scan.integralayer.com](https://scan.integralayer.com) | — |
+
+## EVM Gotchas
+
+- **`--legacy` flag required for Foundry**: Cosmos-EVM does not fully support EIP-1559 transaction types. All `forge script` and `cast send` commands must include `--legacy` or transactions will fail with gas estimation errors.
+
+- **Default EVM chain ID is wrong**: `intgd init` sets the EVM chain ID to `262144` in `app.toml`. You must override it:
+  ```bash
+  # For mainnet:
+  sed -i 's/evm_chain_id = "262144"/evm_chain_id = "26217"/' ~/.intgd/config/app.toml
+  # For testnet:
+  sed -i 's/evm_chain_id = "262144"/evm_chain_id = "26218"/' ~/.intgd/config/app.toml
+  ```
+
+- **Testnet genesis uses `base_fee: 0`**: Genesis transactions (gentxs) carry no fees, so the fee market `base_fee` and `min_gas_price` must be `0` in genesis. The actual gas price floor is enforced post-launch via `minimum-gas-prices` in `app.toml` (e.g. `5000000000000airl` = 5000 gwei).
+
+- **`goal_bonded` must be > 0**: The Cosmos SDK mint module rejects `goal_bonded: "0.0"` in genesis. Use a small positive value like `"0.01"` even if inflation is fixed.

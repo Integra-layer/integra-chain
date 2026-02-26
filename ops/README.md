@@ -459,35 +459,41 @@ apt-get update && apt-get install -y caddy
 
 ### 7.2 — Caddyfile for foundation-1 (primary RPC)
 
+Uses path-based routing on a single domain:
+
 ```bash
 cat > /etc/caddy/Caddyfile << 'EOF'
-rpc.integralayer.com {
-  reverse_proxy 127.0.0.1:26657
-}
-
-rest.integralayer.com {
-  reverse_proxy 127.0.0.1:1317
-}
-
-evm.integralayer.com {
-  reverse_proxy 127.0.0.1:8545
-}
-
-ws.integralayer.com {
-  reverse_proxy 127.0.0.1:8546
+mainnet.integralayer.com {
+  handle /rpc/* {
+    uri strip_prefix /rpc
+    reverse_proxy 127.0.0.1:26657
+  }
+  handle /api/* {
+    uri strip_prefix /api
+    reverse_proxy 127.0.0.1:1317
+  }
+  handle /evm/* {
+    uri strip_prefix /evm
+    reverse_proxy 127.0.0.1:8545
+  }
+  handle /ws/* {
+    uri strip_prefix /ws
+    reverse_proxy 127.0.0.1:8546
+  }
 }
 EOF
 
 systemctl restart caddy
 ```
 
+> **Note:** Testnet uses the same pattern on `testnet.integralayer.com`.
+> Blockscout runs on a separate subdomain: `blockscout.integralayer.com` (mainnet), `testnet.blockscout.integralayer.com` (testnet).
+
 ### 7.3 — Update DNS (Route53 or your DNS provider)
 
 Create A records:
-- `rpc.integralayer.com` -> foundation-1 IP
-- `rest.integralayer.com` -> foundation-1 IP
-- `evm.integralayer.com` -> foundation-1 IP
-- `ws.integralayer.com` -> foundation-1 IP
+- `mainnet.integralayer.com` -> foundation-1 IP
+- `blockscout.integralayer.com` -> foundation-1 IP (or Blockscout server)
 
 ---
 

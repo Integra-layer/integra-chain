@@ -10,14 +10,14 @@ set_network_config() {
     CHAIN_ID="integra-1"
     EVM_CHAIN_ID="26217"
     DENOM="airl"
-    RPC_URL="https://rpc.integralayer.com"
-    SEEDS=""
+    RPC_URL="https://mainnet.integralayer.com/rpc"
+    SEEDS=""  # TBD after new mainnet launch
   else
     CHAIN_ID="integra-testnet-1"
     EVM_CHAIN_ID="26218"
     DENOM="airl"
-    RPC_URL="https://testnet-rpc.integralayer.com"
-    SEEDS=""
+    RPC_URL="https://testnet.integralayer.com/rpc"
+    SEEDS="10d16647b0476d5405ceeb20347437a70da0c0b1@46.225.231.81:26656,1d215b882540caf56adf5d4279f377b57dfecac5@45.77.139.208:26656,bee94426ebd65dd3ee7ab56b8fcebf7f1b1585e7@159.223.206.94:26656"
   fi
 }
 

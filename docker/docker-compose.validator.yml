@@ -1,0 +1,19 @@
+services:
+  validator:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: integra-validator
+    ports:
+      - "26656:26656"
+      - "26657:26657"
+      - "8545:8545"
+      - "1317:1317"
+    volumes:
+      - integra-data:/root/.intgd
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+volumes:
+  integra-data:

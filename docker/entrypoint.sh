@@ -6,6 +6,10 @@ case "$1" in
     exec setup-wizard
     ;;
   start)
+    if [ ! -d "/root/.intgd/config" ]; then
+      echo "First run detected — launching setup wizard..."
+      setup-wizard
+    fi
     exec intgd start \
       --home /root/.intgd \
       --minimum-gas-prices "5000000000000airl" \
