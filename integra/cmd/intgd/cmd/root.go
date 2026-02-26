@@ -168,7 +168,7 @@ func initRootCmd(rootCmd *cobra.Command, app *integra.IntegraApp) {
 		return newApp(l, d, w, ao)
 	}
 	rootCmd.AddCommand(
-		genutilcli.InitCmd(app.BasicModuleManager, defaultNodeHome),
+		CustomInitCmd(app, app.BasicModuleManager, defaultNodeHome),
 		genutilcli.Commands(app.TxConfig(), app.BasicModuleManager, defaultNodeHome),
 		cmtcli.NewCompletionCmd(rootCmd, true),
 		evmdebug.Cmd(),
