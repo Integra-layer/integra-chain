@@ -1,0 +1,13 @@
+# Build context exclusions (Dockerfile is in docker/ but context is repo root)
+.git
+.github
+*.md
+LICENSE
+docs/
+chain-id-card/
+contrib/
+tests/
+testutil/
+precompiles/
+ibc/
+scripts/
