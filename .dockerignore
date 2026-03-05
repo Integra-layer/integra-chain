@@ -6,8 +6,4 @@ LICENSE
 docs/
 chain-id-card/
 contrib/
-tests/
-testutil/
-precompiles/
-ibc/
 scripts/
