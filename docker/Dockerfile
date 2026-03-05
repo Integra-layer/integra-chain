@@ -8,6 +8,7 @@ ENV PACKAGES="curl build-base git bash file linux-headers eudev-dev"
 RUN apk add --no-cache $PACKAGES
 
 COPY go.mod go.sum* ./
+RUN go mod download
 COPY integra/go.mod integra/go.sum* integra/
 RUN cd integra && go mod download
 
