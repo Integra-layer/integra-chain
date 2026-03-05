@@ -7,12 +7,8 @@ WORKDIR /work
 ENV PACKAGES="curl build-base git bash file linux-headers eudev-dev"
 RUN apk add --no-cache $PACKAGES
 
-COPY go.mod go.sum* ./
-RUN go mod download
-COPY integra/go.mod integra/go.sum* integra/
-RUN cd integra && go mod download
-
 COPY . .
+RUN cd integra && go mod download
 RUN LEDGER_ENABLED=false COSMOS_BUILD_OPTIONS="staticlink" BUILD_TAGS=muslc make build
 RUN file /work/build/intgd
 
