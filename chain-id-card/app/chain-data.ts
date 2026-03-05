@@ -62,6 +62,13 @@ export interface ChainSpec {
     vetoThreshold: string;
     minInitialDepositRatio: string;
     burnVoteVeto: boolean;
+    proposalCancelRatio: string;
+  };
+  consensus: {
+    maxBytes: string;
+    maxGas: string;
+    evidenceMaxAge: string;
+    evidenceMaxBytes: string;
   };
   slashing: {
     signedBlocksWindow: number;
@@ -69,10 +76,29 @@ export interface ChainSpec {
     downtimeJailDuration: string;
     slashFractionDoubleSign: string;
     slashFractionDowntime: string;
+    slashDestination: string;
   };
   distribution: {
     communityTax: string;
     withdrawAddrEnabled: boolean;
+    baseProposerReward: string;
+    bonusProposerReward: string;
+  };
+  evm: {
+    evmDenom: string;
+    extraEips: number[];
+    accessControlCreate: string;
+    accessControlCall: string;
+    historyServeWindow: number;
+  };
+  erc20: {
+    enabled: boolean;
+    permissionlessRegistration: boolean;
+  };
+  ibc: {
+    allowedClients: string;
+    sendEnabled: boolean;
+    receiveEnabled: boolean;
   };
   precompiles: {
     name: string;
@@ -85,6 +111,16 @@ export interface ChainSpec {
     description: string;
   }[];
   modules: string[];
+  infrastructure: {
+    validators: number;
+    votingPowerEach: string;
+    servers: {
+      name: string;
+      role: string;
+      provider: string;
+      location: string;
+    }[];
+  };
   endpoints: {
     rpc: string;
     rest: string;
@@ -103,7 +139,7 @@ const sharedSpec = {
     bech32Prefix: "integra",
     homeDir: "~/.intgd",
     cosmosSDK: "v0.53.x",
-    evmFramework: "cosmos/evm v0.5.1",
+    evmFramework: "cosmos/evm v0.5.0",
     cometBFT: "v0.38.19",
   },
   token: {
@@ -115,9 +151,9 @@ const sharedSpec = {
     totalSupply: "100,000,000,000 IRL",
   },
   mint: {
-    inflation: "1%",
-    inflationMin: "1%",
-    inflationMax: "1%",
+    inflation: "3%",
+    inflationMin: "3%",
+    inflationMax: "3%",
     inflationRateChange: "0%",
     goalBonded: "0%",
     blocksPerYear: 6_311_520,
@@ -153,6 +189,13 @@ const sharedSpec = {
     vetoThreshold: "33.4%",
     minInitialDepositRatio: "25%",
     burnVoteVeto: true,
+    proposalCancelRatio: "50%",
+  },
+  consensus: {
+    maxBytes: "22,020,096 (21 MB)",
+    maxGas: "40,000,000",
+    evidenceMaxAge: "100,000 blocks (~48h)",
+    evidenceMaxBytes: "1,048,576 (1 MB)",
   },
   slashing: {
     signedBlocksWindow: 10_000,
@@ -160,10 +203,29 @@ const sharedSpec = {
     downtimeJailDuration: "10 minutes",
     slashFractionDoubleSign: "5%",
     slashFractionDowntime: "0.01%",
+    slashDestination: "Burned (removed from supply)",
   },
   distribution: {
     communityTax: "0%",
     withdrawAddrEnabled: true,
+    baseProposerReward: "0%",
+    bonusProposerReward: "0%",
+  },
+  evm: {
+    evmDenom: "airl",
+    extraEips: [5656, 1153, 6780],
+    accessControlCreate: "Permissionless",
+    accessControlCall: "Permissionless",
+    historyServeWindow: 8192,
+  },
+  erc20: {
+    enabled: true,
+    permissionlessRegistration: true,
+  },
+  ibc: {
+    allowedClients: '["*"] (all)',
+    sendEnabled: true,
+    receiveEnabled: true,
   },
   precompiles: [
     {
@@ -221,12 +283,38 @@ const sharedSpec = {
       address: "0xD4949664cD82660AaE99bEdc034a0deA8A0bd517",
       description: "ERC-20 wrapped version of the native IRL token",
     },
+    {
+      name: "Create2 Deployer",
+      address: "0x4e59b44847b379578588920cA78FbF26c0B4956C",
+      description: "Deterministic contract deployment using CREATE2 opcode",
+    },
+    {
+      name: "Multicall3",
+      address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      description: "Batch multiple read calls into a single RPC request",
+    },
+    {
+      name: "Permit2",
+      address: "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      description:
+        "Uniswap token approval manager with signature-based permits",
+    },
+    {
+      name: "Safe Singleton Factory",
+      address: "0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7",
+      description: "Deploy contracts at the same address across all EVM chains",
+    },
+    {
+      name: "EIP-2935 History",
+      address: "0x0000F90827F1C53a10cb7A02335B175320002935",
+      description:
+        "On-chain storage of recent block hashes for smart contracts",
+    },
   ],
   modules: [
     "auth",
     "authz",
     "bank",
-    "capability",
     "consensus",
     "distribution",
     "evidence",
@@ -234,14 +322,16 @@ const sharedSpec = {
     "genutil",
     "gov",
     "mint",
-    "params",
     "slashing",
     "staking",
     "upgrade",
+    "vesting",
     "evm",
     "erc20",
     "feemarket",
+    "precisebank",
     "ibc-core",
+    "ibc-tm",
     "ibc-transfer",
   ],
 };
@@ -250,9 +340,39 @@ export const chainSpecs: Record<Network, ChainSpec> = {
   mainnet: {
     ...sharedSpec,
     network: {
-      chainId: "integra_26217-1",
+      chainId: "integra-1",
       evmChainId: 26217,
-      status: "Live",
+      status: "Pre-launch",
+    },
+    infrastructure: {
+      validators: 4,
+      votingPowerEach: "25%",
+      servers: [
+        {
+          name: "Mainnet-Gateway",
+          role: "RPC + Validator",
+          provider: "Hetzner",
+          location: "Helsinki, FI",
+        },
+        {
+          name: "Archive",
+          role: "Archive RPC + Validator",
+          provider: "OVH",
+          location: "Paris, FR",
+        },
+        {
+          name: "Signer-1",
+          role: "Signing-only Validator",
+          provider: "Vultr",
+          location: "Amsterdam, NL",
+        },
+        {
+          name: "Signer-2",
+          role: "Signing-only Validator",
+          provider: "AWS",
+          location: "Virginia, US",
+        },
+      ],
     },
     endpoints: {
       rpc: "https://rpc.integralayer.com",
@@ -267,9 +387,33 @@ export const chainSpecs: Record<Network, ChainSpec> = {
   testnet: {
     ...sharedSpec,
     network: {
-      chainId: "integra_26218-1",
+      chainId: "integra-testnet-1",
       evmChainId: 26218,
-      status: "Live",
+      status: "Pre-launch",
+    },
+    infrastructure: {
+      validators: 3,
+      votingPowerEach: "33.3%",
+      servers: [
+        {
+          name: "Testnet-Gateway",
+          role: "RPC + Validator",
+          provider: "Hetzner",
+          location: "Helsinki, FI",
+        },
+        {
+          name: "Signer-1",
+          role: "Signing-only Validator",
+          provider: "Vultr",
+          location: "Amsterdam, NL",
+        },
+        {
+          name: "Signer-2",
+          role: "Signing-only Validator",
+          provider: "AWS",
+          location: "Virginia, US",
+        },
+      ],
     },
     endpoints: {
       rpc: "https://ormos.integralayer.com/cometbft",

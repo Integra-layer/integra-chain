@@ -54,11 +54,17 @@
 
 /* ─── Light + Testnet ─── */
 :root[data-network="testnet"] {
-  --t-accent: #F34499;
-  --t-accent-soft: rgba(243, 68, 153, 0.08);
-  --t-accent-glow: rgba(243, 68, 153, 0.12);
-  --t-gradient: linear-gradient(135deg, #F34499, #FF6D49);
-  --t-gradient-hero: linear-gradient(135deg, rgba(243,68,153,0.06), rgba(255,175,214,0.03));
+  --t-bg: #FAFAFD;
+  --t-card: #FFFFFF;
+  --t-elevated: #F3F2F8;
+  --t-hover: #EDEAF2;
+  --t-accent: #9333EA;
+  --t-accent-soft: rgba(147, 51, 234, 0.07);
+  --t-accent-glow: rgba(147, 51, 234, 0.10);
+  --t-nav-bg: rgba(250, 250, 253, 0.85);
+  --t-gradient: linear-gradient(135deg, #9333EA, #7C3AED);
+  --t-gradient-hero: linear-gradient(135deg, rgba(147,51,234,0.05), rgba(124,58,237,0.02));
+  --t-testnet-stripe: rgba(147, 51, 234, 0.04);
 }
 
 /* ─── Dark + Mainnet ─── */
@@ -82,11 +88,17 @@
 
 /* ─── Dark + Testnet ─── */
 :root[data-theme="dark"][data-network="testnet"] {
-  --t-accent: #F34499;
-  --t-accent-soft: rgba(243, 68, 153, 0.15);
-  --t-accent-glow: rgba(243, 68, 153, 0.18);
-  --t-gradient: linear-gradient(135deg, #F34499, #FF6D49);
-  --t-gradient-hero: linear-gradient(135deg, rgba(243,68,153,0.1), rgba(255,175,214,0.05));
+  --t-bg: #08061A;
+  --t-card: #0E0B1E;
+  --t-elevated: #151228;
+  --t-hover: #1C1833;
+  --t-accent: #A855F7;
+  --t-accent-soft: rgba(168, 85, 247, 0.12);
+  --t-accent-glow: rgba(168, 85, 247, 0.18);
+  --t-nav-bg: rgba(8, 6, 26, 0.85);
+  --t-gradient: linear-gradient(135deg, #A855F7, #7C3AED);
+  --t-gradient-hero: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(124,58,237,0.05));
+  --t-testnet-stripe: rgba(168, 85, 247, 0.04);
 }
 
 * { box-sizing: border-box; }
@@ -291,6 +303,65 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--t-border-strong); border-radius: 3px; }
+
+/* ─── Tooltip hover ─── */
+
+.tip-wrapper:hover .tip-bubble {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ─── Testnet visual differentiation ─── */
+
+.testnet-banner {
+  background: var(--t-gradient);
+  color: white;
+  text-align: center;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.testnet-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--t-accent-soft);
+  color: var(--t-accent);
+  border: 1px solid var(--t-accent);
+}
+
+/* Subtle diagonal stripe on testnet cards */
+:root[data-network="testnet"] .card-hover {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 40px,
+    var(--t-testnet-stripe, rgba(147,51,234,0.03)) 40px,
+    var(--t-testnet-stripe, rgba(147,51,234,0.03)) 41px
+  );
+}
+
+/* Dashed top border on testnet cards */
+:root[data-network="testnet"] .card-hover {
+  border-top: 2px dashed var(--t-accent);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* Testnet stat cards get accent ring */
+:root[data-network="testnet"] .stat-card {
+  border-color: var(--t-accent) !important;
+  border-style: dashed !important;
+}
 
 /* ─── Smooth scroll ─── */
 html { scroll-behavior: smooth; }
