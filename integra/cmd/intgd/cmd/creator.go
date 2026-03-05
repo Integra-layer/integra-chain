@@ -27,7 +27,7 @@ import (
 
 type appCreator struct{}
 
-func (a appCreator) newApp(
+func (a appCreator) newApp( //nolint:unused // cosmos SDK app creator pattern
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
@@ -99,7 +99,7 @@ func (a appCreator) newApp(
 	)
 }
 
-func (a appCreator) appExport(
+func (a appCreator) appExport( //nolint:unused // cosmos SDK app creator pattern
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,

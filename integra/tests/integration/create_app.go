@@ -36,7 +36,7 @@ func CreateEvmd(chainID string, evmChainID uint64, customBaseAppOptions ...func(
 	loadLatest := true
 	appOptions := NewAppOptionsWithFlagHomeAndChainID(defaultNodeHome, evmChainID)
 
-	baseAppOptions := append(customBaseAppOptions, baseapp.SetChainID(chainID))
+	baseAppOptions := append(customBaseAppOptions, baseapp.SetChainID(chainID)) //nolint:gocritic // intentionally creating new slice
 
 	return integra.NewIntegraApp(
 		logger,

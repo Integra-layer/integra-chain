@@ -32,13 +32,13 @@ func BenchmarkGasEstimation(b *testing.B) {
 	// gh := grpc.NewIntegrationHandler(nw)
 	// tf := factory.New(nw, gh)
 
-	chainConfig := types.DefaultChainConfig(nw.GetEIP155ChainID().Uint64())
+	chainConfig := types.DefaultChainConfig(nw.GetEIP155ChainID().Uint64()) //nolint:staticcheck // used after config reset
 	// get the denom and decimals set on chain initialization
 	// because we'll need to set them again when resetting the chain config
-	denom := types.GetEVMCoinDenom()
-	extendedDenom := types.GetEVMCoinExtendedDenom()
-	displayDenom := types.GetEVMCoinDisplayDenom()
-	decimals := types.GetEVMCoinDecimals()
+	denom := types.GetEVMCoinDenom()                 //nolint:staticcheck // captured before reset, used after
+	extendedDenom := types.GetEVMCoinExtendedDenom()  //nolint:staticcheck // captured before reset, used after
+	displayDenom := types.GetEVMCoinDisplayDenom()    //nolint:staticcheck // captured before reset, used after
+	decimals := types.GetEVMCoinDecimals()            //nolint:staticcheck // captured before reset, used after
 
 	configurator := types.NewEVMConfigurator()
 	configurator.ResetTestConfig()

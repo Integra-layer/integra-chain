@@ -784,14 +784,13 @@ func (suite *MiddlewareTestSuite) TestOnRecvPacketNativeErc20() {
 				suite.Require().True(escrowedBal.IsZero(), "escrowed balance should be un-escrowed after receiving the packet")
 
 				// recvAmt should be in the contractAddr upon successful recv callback
-				contractAddr := common.HexToAddress(packetData.Memo)
 				// Parse contract address from memo
 				var memoData map[string]interface{}
 				err = json.Unmarshal([]byte(packetData.Memo), &memoData)
 				suite.Require().NoError(err)
 				destCallback := memoData["dest_callback"].(map[string]interface{})
 				contractAddrStr := destCallback["address"].(string)
-				contractAddr = common.HexToAddress(contractAddrStr)
+				contractAddr := common.HexToAddress(contractAddrStr)
 
 				balAfterUnescrow := evmApp.Erc20Keeper.BalanceOf(evmCtx, nativeErc20.ContractAbi, nativeErc20.ContractAddr, contractAddr)
 				suite.Require().Equal(recvAmt.String(), balAfterUnescrow.String())

@@ -92,13 +92,13 @@ func (s *BalanceHandlerTestSuite) TestRecursivePrecompileCallsWithDebugPrecompil
 	s.Require().False(res.IsErr(), "callback should not fail: %s", res.Events)
 
 	s.Require().Equal(len(res.Events), 15, "callback should have 15 events")
-	debug_count := 0
+	debugCount := 0
 	for _, event := range res.Events {
 		if event.Type == "debug_precompile" {
-			debug_count++
+			debugCount++
 		}
 	}
-	s.Require().Equal(10, debug_count, "callback should have 1 debug precompile")
+	s.Require().Equal(10, debugCount, "callback should have 1 debug precompile")
 
 	// Advance to next block to finalize state
 	s.chain.NextBlock()

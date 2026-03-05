@@ -48,7 +48,7 @@ func init() {
 	SetBip44CoinType(cfg)
 }
 
-func setup(withGenesis bool, invCheckPeriod uint, chainID string, evmChainID uint64) (*IntegraApp, GenesisState) {
+func setup(withGenesis bool, invCheckPeriod uint, chainID string, _ uint64) (*IntegraApp, GenesisState) {
 	db := dbm.NewMemDB()
 
 	appOptions := make(simtestutil.AppOptionsMap, 0)

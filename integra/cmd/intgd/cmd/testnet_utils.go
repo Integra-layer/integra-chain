@@ -16,11 +16,7 @@ func parseAndApplyConfigChanges(nodeConfig *cmtconfig.Config, configChanges []st
 		return nil
 	}
 
-	if err := applyConfigOverrides(nodeConfig, configChanges); err != nil {
-		return err
-	}
-
-	return nil
+	return applyConfigOverrides(nodeConfig, configChanges)
 }
 
 // updateConfigField updates a field in the config based on dot notation

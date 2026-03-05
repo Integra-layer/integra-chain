@@ -59,7 +59,7 @@ func (app *IntegraApp) configureEVMMempool(appOpts servertypes.AppOptions, logge
 
 // createMempoolConfig creates a new EVMMempoolConfig with the default configuration
 // and overrides it with values from appOpts if they exist and are non-zero.
-func (app *IntegraApp) createMempoolConfig(appOpts servertypes.AppOptions, logger log.Logger) (*evmmempool.EVMMempoolConfig, error) {
+func (app *IntegraApp) createMempoolConfig(appOpts servertypes.AppOptions, logger log.Logger) (*evmmempool.EVMMempoolConfig, error) { //nolint:unparam // error return for future extensibility
 	return &evmmempool.EVMMempoolConfig{
 		AnteHandler:      app.GetAnteHandler(),
 		LegacyPoolConfig: evmconfig.GetLegacyPoolConfig(appOpts, logger),

@@ -11,8 +11,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cast"
 
-	_ "github.com/ethereum/go-ethereum/eth/tracers/js"
-	_ "github.com/ethereum/go-ethereum/eth/tracers/native"
+	_ "github.com/ethereum/go-ethereum/eth/tracers/js"     // register js tracer engine
+	_ "github.com/ethereum/go-ethereum/eth/tracers/native" // register native tracer engine
 
 	abci "github.com/cometbft/cometbft/abci/types"
 
@@ -153,7 +153,7 @@ var (
 )
 
 // IntegraApp extends an ABCI application, but with most of its parameters exported.
-type IntegraApp struct {
+type IntegraApp struct { //nolint:revive // IntegraApp is the established name
 	*baseapp.BaseApp
 
 	legacyAmino       *codec.LegacyAmino
@@ -1088,7 +1088,7 @@ func (app *IntegraApp) GetMempool() sdkmempool.ExtMempool {
 }
 
 func (app *IntegraApp) GetAnteHandler() sdk.AnteHandler {
-	return app.BaseApp.AnteHandler()
+	return app.AnteHandler()
 }
 
 // GetTxConfig implements the TestingApp interface.

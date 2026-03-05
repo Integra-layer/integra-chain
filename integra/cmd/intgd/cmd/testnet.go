@@ -70,7 +70,7 @@ var (
 	unsafeStartValidatorFn UnsafeStartValidatorCmdCreator
 )
 
-const TEST_DENOM = "atest"
+const TestDenom = "atest"
 
 var mnemonics = []string{
 	"copper push brief egg scan entry inform record adjust fossil boss egg comic alien upon aspect dry avoid interest fury window hint race symptom",
@@ -108,7 +108,6 @@ type startArgs struct {
 	outputDir       string
 	printMnemonic   bool
 	rpcAddress      string
-	timeoutCommit   time.Duration
 	validatorPowers []int64
 }
 
@@ -367,8 +366,8 @@ func initTestnetFiles(
 			nodeConfig.P2P.AllowDuplicateIP = true
 			nodeConfig.Instrumentation.Prometheus = false
 			nodeConfig.RPC.PprofListenAddress = ""
-			evmCfg.Config.API.Address = fmt.Sprintf("tcp://0.0.0.0:%d", sdkAPIPort+portOffset)
-			evmCfg.Config.GRPC.Address = fmt.Sprintf("0.0.0.0:%d", sdkGRPCPort+portOffset)
+			evmCfg.API.Address = fmt.Sprintf("tcp://0.0.0.0:%d", sdkAPIPort+portOffset)
+			evmCfg.GRPC.Address = fmt.Sprintf("0.0.0.0:%d", sdkGRPCPort+portOffset)
 			evmCfg.JSONRPC.Address = fmt.Sprintf("127.0.0.1:%d", evmJSONRPC+evmPortOffset)
 			evmCfg.JSONRPC.MetricsAddress = fmt.Sprintf("127.0.0.1:%d", evmJSONRPCMetrics+evmPortOffset)
 			evmCfg.JSONRPC.WsAddress = fmt.Sprintf("127.0.0.1:%d", evmJSONRPCWS+evmPortOffset)
@@ -450,7 +449,7 @@ func initTestnetFiles(
 		accTokens := sdk.TokensFromConsensusPower(1000, sdk.DefaultPowerReduction)
 		accStakingTokens := sdk.TokensFromConsensusPower(500, sdk.DefaultPowerReduction)
 		coins := sdk.Coins{
-			sdk.NewCoin(TEST_DENOM, accTokens),
+			sdk.NewCoin(TestDenom, accTokens),
 			sdk.NewCoin(sdk.DefaultBondDenom, accStakingTokens),
 		}
 
@@ -528,7 +527,7 @@ func addExtraAccounts(kb keyring.Keyring, algo keyring.SignatureAlgo) ([]banktyp
 	accTokens := sdk.TokensFromConsensusPower(1000, sdk.DefaultPowerReduction)
 	accStakingTokens := sdk.TokensFromConsensusPower(500, sdk.DefaultPowerReduction)
 	coins := sdk.Coins{
-		sdk.NewCoin(TEST_DENOM, accTokens),
+		sdk.NewCoin(TestDenom, accTokens),
 		sdk.NewCoin(sdk.DefaultBondDenom, accStakingTokens),
 	}
 	coins = coins.Sort()
@@ -581,7 +580,7 @@ func initGenFiles(
 	var evmGenState evmtypes.GenesisState
 	clientCtx.Codec.MustUnmarshalJSON(appGenState[evmtypes.ModuleName], &evmGenState)
 
-	evmGenState.Params.EvmDenom = TEST_DENOM
+	evmGenState.Params.EvmDenom = TestDenom
 	appGenState[evmtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&evmGenState)
 
 	appGenStateJSON, err := json.MarshalIndent(appGenState, "", "  ")
