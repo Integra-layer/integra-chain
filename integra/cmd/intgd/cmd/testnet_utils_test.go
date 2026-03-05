@@ -4,8 +4,9 @@ import (
 	"testing"
 	"time"
 
-	cmtconfig "github.com/cometbft/cometbft/config"
 	"github.com/stretchr/testify/require"
+
+	cmtconfig "github.com/cometbft/cometbft/config"
 )
 
 func TestParseAndApplyConfigChanges(t *testing.T) {

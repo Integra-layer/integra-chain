@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Integra-layer/integra-chain/integra"
+	"github.com/Integra-layer/integra-chain/integra/tests/integration"
 	"github.com/ethereum/go-ethereum/common"
 	testifysuite "github.com/stretchr/testify/suite"
 
-	"github.com/Integra-layer/integra-chain/integra"
-	"github.com/Integra-layer/integra-chain/integra/tests/integration"
 	"github.com/cosmos/evm/testutil"
 	evmibctesting "github.com/cosmos/evm/testutil/ibc"
 	erc20Keeper "github.com/cosmos/evm/x/erc20/keeper"

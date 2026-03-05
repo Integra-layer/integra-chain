@@ -9,12 +9,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/cosmos/evm/config"
-
-	cosmosevmhd "github.com/cosmos/evm/crypto/hd"
-	cosmosevmkeyring "github.com/cosmos/evm/crypto/keyring"
 	"github.com/Integra-layer/integra-chain/integra"
-	cosmosevmserverconfig "github.com/cosmos/evm/server/config"
+	customnetwork "github.com/Integra-layer/integra-chain/integra/tests/network"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
@@ -23,6 +19,12 @@ import (
 	tmtime "github.com/cometbft/cometbft/types/time"
 
 	dbm "github.com/cosmos/cosmos-db"
+	"github.com/cosmos/evm/config"
+	cosmosevmhd "github.com/cosmos/evm/crypto/hd"
+	cosmosevmkeyring "github.com/cosmos/evm/crypto/keyring"
+	cosmosevmserverconfig "github.com/cosmos/evm/server/config"
+	evmnetwork "github.com/cosmos/evm/testutil/integration/evm/network"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"
@@ -47,10 +49,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-
-	customnetwork "github.com/Integra-layer/integra-chain/integra/tests/network"
-	evmnetwork "github.com/cosmos/evm/testutil/integration/evm/network"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 var (

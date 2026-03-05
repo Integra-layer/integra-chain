@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
+	cosmosevmnetwork "github.com/Integra-layer/integra-chain/integra/tests/network"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/stretchr/testify/suite"
 
-	cosmosevmnetwork "github.com/Integra-layer/integra-chain/integra/tests/network"
 	"github.com/cosmos/evm/server/config"
 )
 

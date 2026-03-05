@@ -17,8 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cosmos/evm/utils"
-
+	"github.com/Integra-layer/integra-chain/integra"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/spf13/cobra"
 	"golang.org/x/sync/errgroup"
@@ -30,10 +29,10 @@ import (
 	dbm "github.com/cosmos/cosmos-db"
 	evmconfig "github.com/cosmos/evm/config"
 	"github.com/cosmos/evm/crypto/hd"
-	"github.com/Integra-layer/integra-chain/integra"
 	"github.com/cosmos/evm/server/config"
 	evmtestutil "github.com/cosmos/evm/testutil"
 	testconstants "github.com/cosmos/evm/testutil/constants"
+	"github.com/cosmos/evm/utils"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"

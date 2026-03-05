@@ -3,9 +3,9 @@
 package mocks
 
 import (
-	client "github.com/cosmos/cosmos-sdk/client"
 	mock "github.com/stretchr/testify/mock"
 
+	client "github.com/cosmos/cosmos-sdk/client"
 	types "github.com/cosmos/cosmos-sdk/types"
 )
 

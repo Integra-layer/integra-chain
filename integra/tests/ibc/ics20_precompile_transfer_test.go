@@ -9,12 +9,12 @@ import (
 	"math/big"
 	"testing"
 
+	"github.com/Integra-layer/integra-chain/integra"
+	"github.com/Integra-layer/integra-chain/integra/tests/integration"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/Integra-layer/integra-chain/integra"
-	"github.com/Integra-layer/integra-chain/integra/tests/integration"
 	"github.com/cosmos/evm/precompiles/ics20"
 	chainutil "github.com/cosmos/evm/testutil"
 	evmibctesting "github.com/cosmos/evm/testutil/ibc"

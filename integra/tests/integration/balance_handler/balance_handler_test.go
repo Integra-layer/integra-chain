@@ -2,22 +2,21 @@ package balancehandler
 
 import (
 	"fmt"
-
 	"math/big"
 	"testing"
 
-	sdkmath "cosmossdk.io/math"
-
-	"github.com/cosmos/cosmos-sdk/types"
-
+	"github.com/Integra-layer/integra-chain/integra/tests/integration"
+	debugprecompile "github.com/Integra-layer/integra-chain/integra/tests/testdata/debug"
 	"github.com/stretchr/testify/suite"
 
 	"github.com/cosmos/evm"
 	"github.com/cosmos/evm/contracts"
-	"github.com/Integra-layer/integra-chain/integra/tests/integration"
-	debugprecompile "github.com/Integra-layer/integra-chain/integra/tests/testdata/debug"
 	evmibctesting "github.com/cosmos/evm/testutil/ibc"
 	testutiltypes "github.com/cosmos/evm/testutil/types"
+
+	sdkmath "cosmossdk.io/math"
+
+	"github.com/cosmos/cosmos-sdk/types"
 )
 
 // BalanceHandlerTestSuite tests the balance handler bug where recursive precompile calls

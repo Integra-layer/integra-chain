@@ -8,6 +8,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Integra-layer/integra-chain/integra"
+	"github.com/Integra-layer/integra-chain/integra/tests/ledger/mocks"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/suite"
@@ -27,8 +29,6 @@ import (
 	"github.com/cosmos/evm/crypto/hd"
 	cosmosevmkeyring "github.com/cosmos/evm/crypto/keyring"
 	"github.com/cosmos/evm/encoding"
-	"github.com/Integra-layer/integra-chain/integra"
-	"github.com/Integra-layer/integra-chain/integra/tests/ledger/mocks"
 	"github.com/cosmos/evm/testutil/constants"
 	utiltx "github.com/cosmos/evm/testutil/tx"
 

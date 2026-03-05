@@ -3,15 +3,15 @@ package integra
 import (
 	"fmt"
 
+	evmconfig "github.com/cosmos/evm/config"
+	evmmempool "github.com/cosmos/evm/mempool"
+	evmtypes "github.com/cosmos/evm/x/vm/types"
+
 	"cosmossdk.io/log"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	sdkmempool "github.com/cosmos/cosmos-sdk/types/mempool"
-
-	evmconfig "github.com/cosmos/evm/config"
-	evmmempool "github.com/cosmos/evm/mempool"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 // configureEVMMempool sets up the EVM mempool and related handlers using viper configuration.

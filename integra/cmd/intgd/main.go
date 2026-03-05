@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	integra "github.com/Integra-layer/integra-chain/integra"
 	"github.com/Integra-layer/integra-chain/integra/cmd/intgd/cmd"
+
+	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 func main() {

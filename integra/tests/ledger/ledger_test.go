@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 
+	"github.com/Integra-layer/integra-chain/integra/tests/ledger/mocks"
 	"github.com/spf13/cobra"
 
 	//nolint:revive // dot imports are fine for Ginkgo
@@ -11,7 +12,6 @@ import (
 
 	"github.com/cosmos/evm/crypto/hd"
 	"github.com/cosmos/evm/encoding"
-	"github.com/Integra-layer/integra-chain/integra/tests/ledger/mocks"
 	"github.com/cosmos/evm/server/config"
 	"github.com/cosmos/evm/testutil"
 	utiltx "github.com/cosmos/evm/testutil/tx"

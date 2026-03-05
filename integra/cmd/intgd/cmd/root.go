@@ -5,9 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/cosmos/evm/x/vm/types"
-
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	integra "github.com/Integra-layer/integra-chain/integra"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -20,9 +18,9 @@ import (
 	evmdebug "github.com/cosmos/evm/client/debug"
 	"github.com/cosmos/evm/config"
 	"github.com/cosmos/evm/crypto/hd"
-	integra "github.com/Integra-layer/integra-chain/integra"
 	cosmosevmserver "github.com/cosmos/evm/server"
 	srvflags "github.com/cosmos/evm/server/flags"
+	"github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/store"
@@ -47,6 +45,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
 	txmodule "github.com/cosmos/cosmos-sdk/x/auth/tx/config"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 )
 

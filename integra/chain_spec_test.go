@@ -8,10 +8,11 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	evmtypes "github.com/cosmos/evm/x/vm/types"
+
 	"cosmossdk.io/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	evmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 // =============================================================================
@@ -224,15 +225,15 @@ func TestSpec_EVMPrecompiles(t *testing.T) {
 
 	// All 9 static precompiles must be enabled
 	expectedPrecompiles := []string{
-		evmtypes.P256PrecompileAddress,          // 0x0100
-		evmtypes.Bech32PrecompileAddress,        // 0x0400
-		evmtypes.StakingPrecompileAddress,       // 0x0800
-		evmtypes.DistributionPrecompileAddress,  // 0x0801
-		evmtypes.ICS20PrecompileAddress,         // 0x0802
-		evmtypes.VestingPrecompileAddress,       // 0x0803
-		evmtypes.BankPrecompileAddress,          // 0x0804
-		evmtypes.GovPrecompileAddress,           // 0x0805
-		evmtypes.SlashingPrecompileAddress,      // 0x0806
+		evmtypes.P256PrecompileAddress,         // 0x0100
+		evmtypes.Bech32PrecompileAddress,       // 0x0400
+		evmtypes.StakingPrecompileAddress,      // 0x0800
+		evmtypes.DistributionPrecompileAddress, // 0x0801
+		evmtypes.ICS20PrecompileAddress,        // 0x0802
+		evmtypes.VestingPrecompileAddress,      // 0x0803
+		evmtypes.BankPrecompileAddress,         // 0x0804
+		evmtypes.GovPrecompileAddress,          // 0x0805
+		evmtypes.SlashingPrecompileAddress,     // 0x0806
 	}
 
 	require.Equal(t, expectedPrecompiles, state.Params.ActiveStaticPrecompiles,

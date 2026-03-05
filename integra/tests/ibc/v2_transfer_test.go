@@ -17,10 +17,10 @@ import (
 	"testing"
 	"time"
 
-	testifysuite "github.com/stretchr/testify/suite"
-
 	"github.com/Integra-layer/integra-chain/integra"
 	"github.com/Integra-layer/integra-chain/integra/tests/integration"
+	testifysuite "github.com/stretchr/testify/suite"
+
 	evmibctesting "github.com/cosmos/evm/testutil/ibc"
 	"github.com/cosmos/ibc-go/v10/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"

@@ -2,22 +2,22 @@ package integration
 
 import (
 	"encoding/json"
-	"github.com/cosmos/cosmos-sdk/client/flags"
+
+	"github.com/Integra-layer/integra-chain/integra"
 
 	dbm "github.com/cosmos/cosmos-db"
-	ibctesting "github.com/cosmos/ibc-go/v10/testing"
-
 	"github.com/cosmos/evm"
 	"github.com/cosmos/evm/config"
-	"github.com/Integra-layer/integra-chain/integra"
 	srvflags "github.com/cosmos/evm/server/flags"
 	"github.com/cosmos/evm/testutil/constants"
 	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
+	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 
 	clienthelpers "cosmossdk.io/client/v2/helpers"
 	"cosmossdk.io/log"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	simutils "github.com/cosmos/cosmos-sdk/testutil/sims"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"

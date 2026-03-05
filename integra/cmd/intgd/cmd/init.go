@@ -5,10 +5,11 @@ import (
 	"fmt"
 
 	integra "github.com/Integra-layer/integra-chain/integra"
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/types/module"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
-	"github.com/spf13/cobra"
 )
 
 // CustomInitCmd wraps the SDK InitCmd and applies Integra-specific genesis

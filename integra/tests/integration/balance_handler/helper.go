@@ -7,11 +7,11 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	errorsmod "cosmossdk.io/errors"
-
 	"github.com/cosmos/evm"
-	testutiltypes "github.com/cosmos/evm/testutil/types"
 	evmibctesting "github.com/cosmos/evm/testutil/ibc"
+	testutiltypes "github.com/cosmos/evm/testutil/types"
+
+	errorsmod "cosmossdk.io/errors"
 )
 
 // DeployContract deploys a contract to the test chain
