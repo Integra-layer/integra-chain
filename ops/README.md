@@ -14,37 +14,43 @@ Step-by-step guide to deploy Integra mainnet + testnet from scratch.
 
 ### 1.1 — Inventory
 
-You need 4 servers per network (8 total). Two are reused, four are new.
+You need 5 servers across 4 providers. Each mainnet validator runs on a different provider — if any single provider goes down, at most 1 validator is lost and the chain keeps running.
 
-**Mainnet:**
+| Server | Network | Role | Provider | Location | Est. Cost |
+|--------|---------|------|----------|----------|-----------|
+| Mainnet-Gateway | Mainnet | RPC + explorer + validator | Hetzner | Helsinki, Finland | ~€50/mo |
+| Archive | Mainnet | Archive node + Cosmos explorer + validator | OVH | Paris, France | ~€50/mo |
+| Testnet-Gateway | Testnet | RPC + explorer + validator | Hetzner | Falkenstein, Germany | ~€40/mo |
+| Signer-1 | Both | Silent block signer (mainnet + testnet) | Vultr | Amsterdam, Netherlands | ~€20/mo |
+| Signer-2 | Both | Silent block signer (mainnet + testnet) | AWS | Virginia, USA | ~€20/mo |
 
-| Node | Provider | Role | Status |
-|------|----------|------|--------|
-| foundation-1 | Hetzner Helsinki | RPC (primary) | Reuse 89.167.55.161 |
-| foundation-2 | AWS us-east-1 | RPC (archive) | Reuse 3.92.110.107 |
-| foundation-3 | Hetzner Falkenstein | Signing-only | **NEW — order this** |
-| foundation-4 | OVH/Vultr Paris | Signing-only | **NEW — order this** |
-
-**Testnet:** Colocated on same servers (different ports/home dir) or separate VPS.
+**Validators per network:**
+- Mainnet: 4 validators (Mainnet-Gateway + Archive + Signer-1 + Signer-2) — 25% VP each
+- Testnet: 3 validators (Testnet-Gateway + Signer-1 + Signer-2) — 33.3% VP each
 
 **Minimum specs per server:** 4 vCPU, 16 GB RAM, 500 GB NVMe SSD, Ubuntu 24.04
 
 ### 1.2 — Order new servers
 
-**Hetzner (foundation-3):**
+**Testnet-Gateway (Hetzner Falkenstein):**
 1. Go to https://console.hetzner.cloud
-2. Create new server -> Location: Falkenstein -> Type: CX32 (~$15/mo)
-3. OS: Ubuntu 24.04 -> SSH key: your key -> Name: `foundation-3`
+2. Create new server -> Location: Falkenstein -> Type: CX32 (~€40/mo)
+3. OS: Ubuntu 24.04 -> SSH key: your key -> Name: `testnet-gateway`
 4. Note the IP: `________`
 
-**OVH/Vultr (foundation-4):**
-1. Order B2-30 or equivalent (~$25/mo)
-2. OS: Ubuntu 24.04 -> SSH key: your key -> Name: `foundation-4`
+**Archive (OVH Paris):**
+1. Order B2-30 or equivalent (~€50/mo)
+2. OS: Ubuntu 24.04 -> SSH key: your key -> Name: `archive`
+3. Note the IP: `________`
+
+**Signer-1 (Vultr Amsterdam):**
+1. Order cloud compute (~€20/mo)
+2. OS: Ubuntu 24.04 -> SSH key: your key -> Name: `signer-1`
 3. Note the IP: `________`
 
 ### 1.3 — Prepare existing servers
 
-**foundation-1 (89.167.55.161 — Hetzner Helsinki, Piyush's N1):**
+**Mainnet-Gateway (89.167.55.161 — Hetzner Helsinki):**
 ```bash
 ssh root@89.167.55.161
 
@@ -54,7 +60,7 @@ pkill intgd || true
 mv /root/.intgd /root/.intgd-old-$(date +%Y%m%d) 2>/dev/null || true
 ```
 
-**foundation-2 (3.92.110.107 — AWS, Adam's node):**
+**Signer-2 (3.92.110.107 — AWS Virginia):**
 ```bash
 ssh -i ~/.ssh/integra-validator-key.pem ubuntu@3.92.110.107
 
@@ -99,7 +105,7 @@ intgd version
 
 ```bash
 # From your Mac — repeat for each server:
-SERVERS="89.167.55.161 3.92.110.107 <FOUNDATION-3-IP> <FOUNDATION-4-IP>"
+SERVERS="<mainnet-gateway-ip> <archive-ovh-ip> <testnet-gateway-ip> <signer1-vultr-ip> 3.92.110.107"
 
 for SERVER in $SERVERS; do
   echo "Deploying to $SERVER..."
@@ -119,48 +125,48 @@ intgd version
 
 ## Phase 3: Genesis Ceremony
 
-This is the critical phase. One coordinator node (foundation-1) builds the genesis, others contribute their gentx.
+This is the critical phase. One coordinator node (Mainnet-Gateway) builds the genesis, others contribute their gentx.
 
 ### 3.1 — Copy ops scripts to coordinator
 
 ```bash
-scp ops/genesis-builder.sh root@89.167.55.161:/usr/local/bin/genesis-builder
-ssh root@89.167.55.161 "chmod +x /usr/local/bin/genesis-builder"
+scp ops/genesis-builder.sh root@<mainnet-gateway-ip>:/usr/local/bin/genesis-builder
+ssh root@<mainnet-gateway-ip> "chmod +x /usr/local/bin/genesis-builder"
 ```
 
-### 3.2 — Initialize on coordinator (foundation-1)
+### 3.2 — Initialize on coordinator (Mainnet-Gateway)
 
 ```bash
-ssh root@89.167.55.161
+ssh root@<mainnet-gateway-ip>
 
 # Initialize the node
-intgd init foundation-1 --chain-id integra-1 --home /root/.intgd
+intgd init mainnet-gateway --chain-id integra-1 --home /root/.intgd
 ```
 
-### 3.3 — Generate keys on EVERY node
+### 3.3 — Generate keys on EVERY mainnet node
 
 On each server, generate a validator key:
 
 ```bash
-# foundation-1:
+# Mainnet-Gateway:
 intgd keys add validator --keyring-backend file --home /root/.intgd
 # SAVE THE MNEMONIC!
 # Note the address: integra1________
 
-# foundation-2:
+# Archive:
 intgd keys add validator --keyring-backend file --home /root/.intgd
 # Note the address: integra1________
 
-# foundation-3:
+# Signer-1:
 intgd keys add validator --keyring-backend file --home /root/.intgd
 # Note the address: integra1________
 
-# foundation-4:
+# Signer-2:
 intgd keys add validator --keyring-backend file --home /root/.intgd
 # Note the address: integra1________
 ```
 
-Also generate the treasury key (on foundation-1 only):
+Also generate the treasury key (on Mainnet-Gateway only):
 ```bash
 intgd keys add foundation-treasury --keyring-backend file --home /root/.intgd
 # SAVE THIS MNEMONIC — this controls 99.999B IRL
@@ -170,18 +176,18 @@ intgd keys add foundation-treasury --keyring-backend file --home /root/.intgd
 ### 3.4 — Fill in addresses and add genesis accounts (on coordinator)
 
 ```bash
-ssh root@89.167.55.161
+ssh root@<mainnet-gateway-ip>
 
 # Set the addresses you collected above
 export TREASURY_ADDR="integra1..."
 export VALIDATOR_ADDRS="integra1... integra1... integra1... integra1..."
 
-# Add treasury account: 99,999,996,000 IRL
-intgd genesis add-genesis-account $TREASURY_ADDR 99999996000000000000000000000airl --home /root/.intgd
+# Add treasury account: 99,999,979,600 IRL (100B - 4*5100)
+intgd genesis add-genesis-account $TREASURY_ADDR 99999979600000000000000000000airl --home /root/.intgd
 
-# Add each validator account: 1,000 IRL each
+# Add each validator account: 5,100 IRL each
 for ADDR in $VALIDATOR_ADDRS; do
-  intgd genesis add-genesis-account $ADDR 1000000000000000000000airl --home /root/.intgd
+  intgd genesis add-genesis-account $ADDR 5100000000000000000000airl --home /root/.intgd
 done
 ```
 
@@ -207,10 +213,10 @@ jq '.app_state.bank.denom_metadata = [{
 ### 3.6 — Distribute genesis to all nodes
 
 ```bash
-# From foundation-1, copy genesis to all other nodes:
-scp /root/.intgd/config/genesis.json root@3.92.110.107:/root/.intgd/config/genesis.json
-scp /root/.intgd/config/genesis.json root@<FOUNDATION-3-IP>:/root/.intgd/config/genesis.json
-scp /root/.intgd/config/genesis.json root@<FOUNDATION-4-IP>:/root/.intgd/config/genesis.json
+# From Mainnet-Gateway, copy genesis to all other mainnet nodes:
+scp /root/.intgd/config/genesis.json root@<archive-ovh-ip>:/root/.intgd/config/genesis.json
+scp /root/.intgd/config/genesis.json root@<signer1-vultr-ip>:/root/.intgd/config/genesis.json
+scp /root/.intgd/config/genesis.json ubuntu@3.92.110.107:/root/.intgd/config/genesis.json
 ```
 
 ### 3.7 — Create gentx on EVERY node
@@ -218,25 +224,26 @@ scp /root/.intgd/config/genesis.json root@<FOUNDATION-4-IP>:/root/.intgd/config/
 Each validator creates their own gentx:
 
 ```bash
-# On foundation-1:
-intgd genesis gentx validator 1000000000000000000000airl \
-  --chain-id integra-1 --moniker "Foundation-1" \
+# On Mainnet-Gateway:
+intgd genesis gentx validator 100000000000000000000airl \
+  --chain-id integra-1 --moniker "Mainnet-Gateway" \
   --commission-rate 0.05 --commission-max-rate 0.20 --commission-max-change-rate 0.01 \
-  --min-self-delegation 1000000000000000000000 \
+  --min-self-delegation 1000000000000000000 \
+  --gas-prices 5000000000000airl --gas 200000 \
   --keyring-backend file --home /root/.intgd
 
-# On foundation-2: (same with --moniker "Foundation-2")
-# On foundation-3: (same with --moniker "Foundation-3")
-# On foundation-4: (same with --moniker "Foundation-4")
+# On Archive: (same with --moniker "Archive")
+# On Signer-1: (same with --moniker "Signer-1")
+# On Signer-2: (same with --moniker "Signer-2")
 ```
 
 ### 3.8 — Collect gentxs on coordinator
 
 ```bash
-# Copy gentx files FROM each node TO foundation-1
-scp root@3.92.110.107:/root/.intgd/config/gentx/*.json /root/.intgd/config/gentx/
-scp root@<FOUNDATION-3-IP>:/root/.intgd/config/gentx/*.json /root/.intgd/config/gentx/
-scp root@<FOUNDATION-4-IP>:/root/.intgd/config/gentx/*.json /root/.intgd/config/gentx/
+# Copy gentx files FROM each node TO Mainnet-Gateway
+scp root@<archive-ovh-ip>:/root/.intgd/config/gentx/*.json /root/.intgd/config/gentx/
+scp root@<signer1-vultr-ip>:/root/.intgd/config/gentx/*.json /root/.intgd/config/gentx/
+scp ubuntu@3.92.110.107:/root/.intgd/config/gentx/*.json /root/.intgd/config/gentx/
 
 # Verify 4 gentx files
 ls /root/.intgd/config/gentx/
@@ -257,9 +264,9 @@ intgd genesis validate --home /root/.intgd
 
 ```bash
 # The genesis now includes all gentxs. Redistribute:
-scp /root/.intgd/config/genesis.json root@3.92.110.107:/root/.intgd/config/genesis.json
-scp /root/.intgd/config/genesis.json root@<FOUNDATION-3-IP>:/root/.intgd/config/genesis.json
-scp /root/.intgd/config/genesis.json root@<FOUNDATION-4-IP>:/root/.intgd/config/genesis.json
+scp /root/.intgd/config/genesis.json root@<archive-ovh-ip>:/root/.intgd/config/genesis.json
+scp /root/.intgd/config/genesis.json root@<signer1-vultr-ip>:/root/.intgd/config/genesis.json
+scp /root/.intgd/config/genesis.json ubuntu@3.92.110.107:/root/.intgd/config/genesis.json
 ```
 
 ---
@@ -278,7 +285,7 @@ intgd comet show-node-id --home /root/.intgd
 Format: `<id>@<ip>:26656`
 
 ```
-PEERS="<id1>@89.167.55.161:26656,<id2>@3.92.110.107:26656,<id3>@<F3-IP>:26656,<id4>@<F4-IP>:26656"
+PEERS="<id-gateway>@<mainnet-gateway-ip>:26656,<id-archive>@<archive-ovh-ip>:26656,<id-signer1>@<signer1-vultr-ip>:26656,<id-signer2>@3.92.110.107:26656"
 ```
 
 ### 4.3 — Apply config on ALL nodes
@@ -299,7 +306,7 @@ sed -i 's/evm_chain_id = "262144"/evm_chain_id = "26217"/' $HOME_DIR/config/app.
 sed -i 's/chain-id = ""/chain-id = "integra-1"/' $HOME_DIR/config/client.toml
 ```
 
-### 4.4 — RPC nodes only (foundation-1, foundation-2)
+### 4.4 — RPC nodes only (Mainnet-Gateway, Archive)
 
 ```bash
 # Enable REST API
@@ -312,7 +319,7 @@ sed -i '/\[json-rpc\]/,/\[/ s/enable = false/enable = true/' $HOME_DIR/config/ap
 sed -i 's/snapshot-interval = 0/snapshot-interval = 1000/' $HOME_DIR/config/app.toml
 ```
 
-### 4.5 — Signing-only nodes (foundation-3, foundation-4)
+### 4.5 — Signing-only nodes (Signer-1, Signer-2)
 
 ```bash
 # Aggressive pruning
@@ -355,10 +362,10 @@ systemctl daemon-reload
 systemctl enable intgd
 ```
 
-### 5.2 — Start all 4 nodes within 60 seconds of each other
+### 5.2 — Start all 4 mainnet nodes within 60 seconds of each other
 
 ```bash
-# On ALL 4 servers, run as close together as possible:
+# On ALL 4 mainnet servers (Mainnet-Gateway, Archive, Signer-1, Signer-2), run as close together as possible:
 systemctl start intgd
 ```
 
@@ -394,7 +401,7 @@ intgd query staking validators --home /root/.intgd -o json | \
   jq '.validators[] | {moniker: .description.moniker, status, tokens}'
 ```
 
-Expected: 4 validators, all status `BOND_STATUS_BONDED`, tokens ~1000000000000000000000 each.
+Expected: 4 validators, all status `BOND_STATUS_BONDED`, tokens ~100000000000000000000 each (100 IRL self-stake).
 
 ---
 
@@ -409,7 +416,7 @@ intgd query staking validators --home /root/.intgd -o json | \
 
 ### 6.2 — Delegate 250M IRL from treasury to each validator
 
-Run on foundation-1 (where treasury key lives):
+Run on Mainnet-Gateway (where treasury key lives):
 
 ```bash
 AMOUNT="250000000000000000000000000000airl"  # 250,000,000 IRL
@@ -451,13 +458,13 @@ Expected: ~250,001,000 IRL each, ~25% VP each.
 
 ## Phase 7: DNS and Public Endpoints
 
-### 7.1 — Install Caddy on RPC nodes (foundation-1 and foundation-2)
+### 7.1 — Install Caddy on RPC nodes (Mainnet-Gateway and Archive)
 
 ```bash
 apt-get update && apt-get install -y caddy
 ```
 
-### 7.2 — Caddyfile for foundation-1 (primary RPC)
+### 7.2 — Caddyfile for Mainnet-Gateway (primary RPC)
 
 Uses path-based routing on a single domain:
 
@@ -492,8 +499,8 @@ systemctl restart caddy
 ### 7.3 — Update DNS (Route53 or your DNS provider)
 
 Create A records:
-- `mainnet.integralayer.com` -> foundation-1 IP
-- `blockscout.integralayer.com` -> foundation-1 IP (or Blockscout server)
+- `mainnet.integralayer.com` -> Mainnet-Gateway IP
+- `blockscout.integralayer.com` -> Mainnet-Gateway IP (or Blockscout server)
 
 ---
 
@@ -549,9 +556,9 @@ intgd query staking validators -o json | \
 intgd query staking validators -o json | \
   jq '.validators[] | {moniker: .description.moniker, tokens}'
 
-# 4. Inflation correct (1%)?
+# 4. Inflation correct (3%)?
 intgd query mint params -o json | jq '.params.inflation_max'
-# Expected: "0.010000000000000000"
+# Expected: "0.030000000000000000"
 
 # 5. Total supply correct?
 intgd query bank total -o json | jq '.supply'
@@ -573,7 +580,7 @@ intgd tx bank send foundation-treasury <val1-addr> 1000000000000000000airl \
 ## Troubleshooting
 
 **Chain not producing blocks:**
-- Check all 4 nodes are running: `systemctl status intgd`
+- Check all mainnet nodes are running: `systemctl status intgd`
 - Check peers connected: `curl -s localhost:26657/net_info | jq '.result.n_peers'`
 - Check genesis matches: `sha256sum /root/.intgd/config/genesis.json` (must be same on all)
 

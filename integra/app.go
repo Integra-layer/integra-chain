@@ -889,7 +889,7 @@ func (app *IntegraApp) TxConfig() client.TxConfig {
 func (app *IntegraApp) DefaultGenesis() map[string]json.RawMessage {
 	genesis := app.BasicModuleManager.DefaultGenesis(app.appCodec)
 
-	// Mint: 1% fixed inflation
+	// Mint: 3% fixed inflation
 	mintGenState := NewMintGenesisState()
 	genesis[minttypes.ModuleName] = app.appCodec.MustMarshalJSON(mintGenState)
 

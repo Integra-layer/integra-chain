@@ -112,17 +112,17 @@ func TestSpec_Mint(t *testing.T) {
 
 	require.Equal(t, "airl", p.MintDenom, "mint denom must be airl")
 
-	// Fixed 1% inflation: min = max = 0.01, rate change = 0
-	require.Equal(t, math.LegacyMustNewDecFromStr("0.01"), p.InflationMax)
-	require.Equal(t, math.LegacyMustNewDecFromStr("0.01"), p.InflationMin)
+	// Fixed 3% inflation: min = max = 0.03, rate change = 0
+	require.Equal(t, math.LegacyMustNewDecFromStr("0.03"), p.InflationMax)
+	require.Equal(t, math.LegacyMustNewDecFromStr("0.03"), p.InflationMin)
 	require.Equal(t, math.LegacyMustNewDecFromStr("0.0"), p.InflationRateChange)
-	require.Equal(t, math.LegacyMustNewDecFromStr("0.0"), p.GoalBonded)
+	require.Equal(t, math.LegacyMustNewDecFromStr("0.01"), p.GoalBonded)
 
 	// ~5s block time → 6,311,520 blocks/year
 	require.Equal(t, uint64(6_311_520), p.BlocksPerYear)
 
-	// Minter starts at 1%
-	require.Equal(t, math.LegacyMustNewDecFromStr("0.01"), state.Minter.Inflation)
+	// Minter starts at 3%
+	require.Equal(t, math.LegacyMustNewDecFromStr("0.03"), state.Minter.Inflation)
 }
 
 // --- Fee Market (EIP-1559) ---------------------------------------------------
@@ -162,23 +162,23 @@ func TestSpec_Governance(t *testing.T) {
 	state := NewGovGenesisState()
 	p := state.Params
 
-	// Min deposit: 1,000,000 IRL = 1e24 airl
+	// Min deposit: 100,000,000 IRL = 1e26 airl
 	require.Len(t, p.MinDeposit, 1)
 	require.Equal(t, "airl", p.MinDeposit[0].Denom)
-	expectedMinDeposit, _ := new(big.Int).SetString("1000000000000000000000000", 10)
+	expectedMinDeposit, _ := new(big.Int).SetString("100000000000000000000000000", 10)
 	require.Equal(t, math.NewIntFromBigInt(expectedMinDeposit), p.MinDeposit[0].Amount,
-		"min deposit must be 1,000,000 IRL (1e24 airl)")
+		"min deposit must be 100,000,000 IRL (1e26 airl)")
 
-	// Expedited min deposit: 5,000,000 IRL = 5e24 airl
+	// Expedited min deposit: 500,000,000 IRL = 5e26 airl
 	require.Len(t, p.ExpeditedMinDeposit, 1)
-	expectedExpDeposit, _ := new(big.Int).SetString("5000000000000000000000000", 10)
+	expectedExpDeposit, _ := new(big.Int).SetString("500000000000000000000000000", 10)
 	require.Equal(t, math.NewIntFromBigInt(expectedExpDeposit), p.ExpeditedMinDeposit[0].Amount,
-		"expedited min deposit must be 5,000,000 IRL (5e24 airl)")
+		"expedited min deposit must be 500,000,000 IRL (5e26 airl)")
 
 	// Periods
 	require.Equal(t, 7*24*time.Hour, *p.MaxDepositPeriod, "max deposit period must be 7 days")
-	require.Equal(t, 5*24*time.Hour, *p.VotingPeriod, "voting period must be 5 days")
-	require.Equal(t, 24*time.Hour, *p.ExpeditedVotingPeriod, "expedited voting period must be 1 day")
+	require.Equal(t, 7*24*time.Hour, *p.VotingPeriod, "voting period must be 7 days")
+	require.Equal(t, 3*24*time.Hour, *p.ExpeditedVotingPeriod, "expedited voting period must be 3 days")
 
 	// Thresholds
 	require.Equal(t, "0.334", p.Quorum, "quorum must be 33.4%")
@@ -263,6 +263,8 @@ func TestSpec_ERC20TokenPairs(t *testing.T) {
 	state := NewErc20GenesisState()
 	require.NotEmpty(t, state.TokenPairs, "at least one token pair required (native)")
 	require.NotEmpty(t, state.NativePrecompiles, "native precompile (WIRL) must be set")
+	require.False(t, state.Params.PermissionlessRegistration,
+		"permissionless registration must be disabled (governance-only)")
 }
 
 // --- Upgrade Handler ---------------------------------------------------------

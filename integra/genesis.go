@@ -35,25 +35,27 @@ func NewEVMGenesisState() *evmtypes.GenesisState {
 }
 
 // NewErc20GenesisState returns the default genesis state for the ERC20 module.
+// PermissionlessRegistration disabled — only governance can register new token pairs.
 func NewErc20GenesisState() *erc20types.GenesisState {
 	erc20GenState := erc20types.DefaultGenesisState()
 	erc20GenState.TokenPairs = testconstants.ExampleTokenPairs
 	erc20GenState.NativePrecompiles = []string{testconstants.WEVMOSContractMainnet}
+	erc20GenState.Params.PermissionlessRegistration = false
 
 	return erc20GenState
 }
 
 // NewMintGenesisState returns the genesis state for the mint module.
-// 1% fixed inflation, 6,311,520 blocks/year (5s block time).
+// 3% fixed inflation, 6,311,520 blocks/year (5s block time).
 func NewMintGenesisState() *minttypes.GenesisState {
 	mintGenState := minttypes.DefaultGenesisState()
 	mintGenState.Params.MintDenom = IntegraChainDenom
 	mintGenState.Params.InflationRateChange = math.LegacyMustNewDecFromStr("0.0")
-	mintGenState.Params.InflationMax = math.LegacyMustNewDecFromStr("0.01")
-	mintGenState.Params.InflationMin = math.LegacyMustNewDecFromStr("0.01")
-	mintGenState.Params.GoalBonded = math.LegacyMustNewDecFromStr("0.0")
+	mintGenState.Params.InflationMax = math.LegacyMustNewDecFromStr("0.03")
+	mintGenState.Params.InflationMin = math.LegacyMustNewDecFromStr("0.03")
+	mintGenState.Params.GoalBonded = math.LegacyMustNewDecFromStr("0.01")
 	mintGenState.Params.BlocksPerYear = 6_311_520
-	mintGenState.Minter.Inflation = math.LegacyMustNewDecFromStr("0.01")
+	mintGenState.Minter.Inflation = math.LegacyMustNewDecFromStr("0.03")
 
 	return mintGenState
 }
@@ -87,25 +89,25 @@ func NewStakingGenesisState() *stakingtypes.GenesisState {
 }
 
 // NewGovGenesisState returns the genesis state for the governance module.
-// 1M IRL min deposit, 5-day voting, 1-day expedited.
+// 100M IRL min deposit, 7-day voting, 3-day expedited.
 func NewGovGenesisState() *govv1.GenesisState {
 	govGenState := govv1.DefaultGenesisState()
 
-	// 1,000,000 IRL = 1e24 airl
-	minDeposit, _ := new(big.Int).SetString("1000000000000000000000000", 10)
+	// 100,000,000 IRL = 1e26 airl
+	minDeposit, _ := new(big.Int).SetString("100000000000000000000000000", 10)
 	govGenState.Params.MinDeposit = sdk.NewCoins(sdk.NewCoin(IntegraChainDenom, math.NewIntFromBigInt(minDeposit)))
 
-	// 5,000,000 IRL = 5e24 airl
-	expeditedMinDeposit, _ := new(big.Int).SetString("5000000000000000000000000", 10)
+	// 500,000,000 IRL = 5e26 airl
+	expeditedMinDeposit, _ := new(big.Int).SetString("500000000000000000000000000", 10)
 	govGenState.Params.ExpeditedMinDeposit = sdk.NewCoins(sdk.NewCoin(IntegraChainDenom, math.NewIntFromBigInt(expeditedMinDeposit)))
 
 	maxDepositPeriod := 7 * 24 * time.Hour
 	govGenState.Params.MaxDepositPeriod = &maxDepositPeriod
 
-	votingPeriod := 5 * 24 * time.Hour
+	votingPeriod := 7 * 24 * time.Hour
 	govGenState.Params.VotingPeriod = &votingPeriod
 
-	expeditedVotingPeriod := 24 * time.Hour
+	expeditedVotingPeriod := 3 * 24 * time.Hour
 	govGenState.Params.ExpeditedVotingPeriod = &expeditedVotingPeriod
 
 	govGenState.Params.Quorum = "0.334"

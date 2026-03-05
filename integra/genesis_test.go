@@ -15,14 +15,14 @@ func TestNewMintGenesisState(t *testing.T) {
 
 	params := state.Params
 	require.Equal(t, "airl", params.MintDenom)
-	require.Equal(t, math.LegacyMustNewDecFromStr("0.01"), params.InflationMax)
-	require.Equal(t, math.LegacyMustNewDecFromStr("0.01"), params.InflationMin)
+	require.Equal(t, math.LegacyMustNewDecFromStr("0.03"), params.InflationMax)
+	require.Equal(t, math.LegacyMustNewDecFromStr("0.03"), params.InflationMin)
 	require.Equal(t, math.LegacyMustNewDecFromStr("0.0"), params.InflationRateChange)
-	require.Equal(t, math.LegacyMustNewDecFromStr("0.0"), params.GoalBonded)
+	require.Equal(t, math.LegacyMustNewDecFromStr("0.01"), params.GoalBonded)
 	require.Equal(t, uint64(6_311_520), params.BlocksPerYear)
 
-	// Minter should start at 1% inflation
-	require.Equal(t, math.LegacyMustNewDecFromStr("0.01"), state.Minter.Inflation)
+	// Minter should start at 3% inflation
+	require.Equal(t, math.LegacyMustNewDecFromStr("0.03"), state.Minter.Inflation)
 }
 
 func TestNewFeeMarketGenesisState(t *testing.T) {
@@ -56,18 +56,18 @@ func TestNewGovGenesisState(t *testing.T) {
 	require.NotNil(t, state)
 
 	params := state.Params
-	// Min deposit: 1,000,000 IRL = 1e24 airl
+	// Min deposit: 100,000,000 IRL = 1e26 airl
 	require.Len(t, params.MinDeposit, 1)
 	require.Equal(t, "airl", params.MinDeposit[0].Denom)
-	require.Equal(t, "1000000000000000000000000", params.MinDeposit[0].Amount.String())
+	require.Equal(t, "100000000000000000000000000", params.MinDeposit[0].Amount.String())
 
-	// Expedited min deposit: 5,000,000 IRL = 5e24 airl
+	// Expedited min deposit: 500,000,000 IRL = 5e26 airl
 	require.Len(t, params.ExpeditedMinDeposit, 1)
-	require.Equal(t, "5000000000000000000000000", params.ExpeditedMinDeposit[0].Amount.String())
+	require.Equal(t, "500000000000000000000000000", params.ExpeditedMinDeposit[0].Amount.String())
 
 	require.Equal(t, 7*24*time.Hour, *params.MaxDepositPeriod)
-	require.Equal(t, 5*24*time.Hour, *params.VotingPeriod)
-	require.Equal(t, 24*time.Hour, *params.ExpeditedVotingPeriod)
+	require.Equal(t, 7*24*time.Hour, *params.VotingPeriod)
+	require.Equal(t, 3*24*time.Hour, *params.ExpeditedVotingPeriod)
 
 	require.Equal(t, "0.334", params.Quorum)
 	require.Equal(t, "0.5", params.Threshold)
@@ -109,4 +109,5 @@ func TestNewErc20GenesisState(t *testing.T) {
 	require.NotNil(t, state)
 	require.NotEmpty(t, state.TokenPairs)
 	require.NotEmpty(t, state.NativePrecompiles)
+	require.False(t, state.Params.PermissionlessRegistration, "permissionless registration should be disabled")
 }

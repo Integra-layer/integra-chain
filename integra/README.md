@@ -18,7 +18,7 @@ Integra Layer is an EVM-compatible blockchain built on the Cosmos SDK using the 
 ## Genesis Parameters
 
 ### Mint
-- **Inflation**: 1% fixed (min = max = 0.01, rate change = 0)
+- **Inflation**: 3% fixed (min = max = 0.03, rate change = 0)
 - **Mint Denom**: `airl`
 - **Blocks/Year**: 6,311,520 (~5s block time)
 
@@ -38,11 +38,11 @@ Integra Layer is an EVM-compatible blockchain built on the Cosmos SDK using the 
 - **Bond Denom**: `airl`
 
 ### Governance
-- **Min Deposit**: 1,000,000 IRL (1e24 airl)
-- **Expedited Min Deposit**: 5,000,000 IRL (5e24 airl)
+- **Min Deposit**: 100,000,000 IRL (1e26 airl)
+- **Expedited Min Deposit**: 500,000,000 IRL (5e26 airl)
 - **Max Deposit Period**: 7 days
-- **Voting Period**: 5 days
-- **Expedited Voting Period**: 1 day
+- **Voting Period**: 7 days
+- **Expedited Voting Period**: 3 days
 - **Quorum**: 33.4%
 - **Threshold**: 50%
 - **Veto Threshold**: 33.4%
@@ -64,6 +64,7 @@ Integra Layer is an EVM-compatible blockchain built on the Cosmos SDK using the 
 - **Precompiles**: All available static precompiles enabled
 - **Preinstalls**: Default preinstalls enabled
 - **ERC20 Token Pairs**: Native token pair + WIRL precompile
+- **ERC20 Permissionless Registration**: Disabled (governance-only)
 
 ## Cosmos SDK Modules
 
