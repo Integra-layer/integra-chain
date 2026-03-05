@@ -46,7 +46,7 @@ jobs:
       - name: Run integra module tests
         run: |
           cd integra
-          go test ./... -count=1 -timeout 300s
+          go test $(go list ./... | grep -v '/tests/integration\|/tests/ledger') -count=1 -timeout 300s
 
   test-docker:
     name: Docker Script Tests

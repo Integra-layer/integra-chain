@@ -380,7 +380,7 @@ test-rpc-compat-stop:
 
 test-system: build-v04 build
 	mkdir -p ./tests/systemtests/binaries/
-	cp $(BUILDDIR)/evmd ./tests/systemtests/binaries/
+	cp $(BUILDDIR)/$(EXAMPLE_BINARY) ./tests/systemtests/binaries/
 	cd tests/systemtests/Counter && forge build
 	$(MAKE) -C tests/systemtests test
 
@@ -388,7 +388,7 @@ build-v04:
 	mkdir -p ./tests/systemtests/binaries/v0.4
 	git checkout v0.4.1
 	make build
-	cp $(BUILDDIR)/evmd ./tests/systemtests/binaries/v0.4
+	cp $(BUILDDIR)/$(EXAMPLE_BINARY) ./tests/systemtests/binaries/v0.4
 	git checkout -
 
 mocks:
