@@ -18,7 +18,7 @@ teardown() {
   [ "$CHAIN_ID" = "integra-1" ]
   [ "$EVM_CHAIN_ID" = "26217" ]
   [ "$DENOM" = "airl" ]
-  [ "$RPC_URL" = "https://rpc.integralayer.com" ]
+  [ "$RPC_URL" = "https://mainnet.integralayer.com/rpc" ]
 }
 
 @test "set_network_config: testnet (choice 2)" {
@@ -26,7 +26,7 @@ teardown() {
   [ "$CHAIN_ID" = "integra-testnet-1" ]
   [ "$EVM_CHAIN_ID" = "26218" ]
   [ "$DENOM" = "airl" ]
-  [ "$RPC_URL" = "https://testnet-rpc.integralayer.com" ]
+  [ "$RPC_URL" = "https://testnet.integralayer.com/rpc" ]
 }
 
 @test "set_network_config: defaults to mainnet on empty input" {
