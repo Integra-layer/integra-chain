@@ -385,11 +385,16 @@ test-system: build-v04 build
 	$(MAKE) -C tests/systemtests test
 
 build-v04:
-	mkdir -p ./tests/systemtests/binaries/v0.4
-	git checkout v0.4.1
-	make build
-	cp $(BUILDDIR)/$(EXAMPLE_BINARY) ./tests/systemtests/binaries/v0.4
-	git checkout -
+	@if git rev-parse v0.4.1 >/dev/null 2>&1; then \
+		mkdir -p ./tests/systemtests/binaries/v0.4; \
+		git checkout v0.4.1; \
+		make build; \
+		cp $(BUILDDIR)/$(EXAMPLE_BINARY) ./tests/systemtests/binaries/v0.4; \
+		git checkout -; \
+	else \
+		echo "Tag v0.4.1 not found, skipping v0.4 binary build"; \
+		mkdir -p ./tests/systemtests/binaries/v0.4; \
+	fi
 
 mocks:
 	@echo "--> generating mocks"
