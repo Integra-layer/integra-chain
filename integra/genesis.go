@@ -13,6 +13,7 @@ import (
 	"cosmossdk.io/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
@@ -28,6 +29,7 @@ type GenesisState map[string]json.RawMessage
 func NewEVMGenesisState() *evmtypes.GenesisState {
 	evmGenState := evmtypes.DefaultGenesisState()
 	evmGenState.Params.EvmDenom = IntegraChainDenom
+	evmGenState.Params.ExtendedDenomOptions = &evmtypes.ExtendedDenomOptions{ExtendedDenom: IntegraChainDenom}
 	evmGenState.Params.ActiveStaticPrecompiles = evmtypes.AvailableStaticPrecompiles
 	evmGenState.Preinstalls = evmtypes.DefaultPreinstalls
 
@@ -38,7 +40,14 @@ func NewEVMGenesisState() *evmtypes.GenesisState {
 // PermissionlessRegistration disabled — only governance can register new token pairs.
 func NewErc20GenesisState() *erc20types.GenesisState {
 	erc20GenState := erc20types.DefaultGenesisState()
-	erc20GenState.TokenPairs = testconstants.ExampleTokenPairs
+	erc20GenState.TokenPairs = []erc20types.TokenPair{
+		{
+			Erc20Address:  testconstants.WEVMOSContractMainnet,
+			Denom:         IntegraChainDenom,
+			Enabled:       true,
+			ContractOwner: erc20types.OWNER_MODULE,
+		},
+	}
 	erc20GenState.NativePrecompiles = []string{testconstants.WEVMOSContractMainnet}
 	erc20GenState.Params.PermissionlessRegistration = false
 
@@ -140,4 +149,31 @@ func NewDistributionGenesisState() *distrtypes.GenesisState {
 	distrGenState.Params.WithdrawAddrEnabled = true
 
 	return distrGenState
+}
+
+// NewBankGenesisState returns the genesis state for the bank module.
+// Includes IRL denom metadata for proper token display.
+func NewBankGenesisState() *banktypes.GenesisState {
+	bankGenState := banktypes.DefaultGenesisState()
+	bankGenState.DenomMetadata = []banktypes.Metadata{
+		{
+			Description: "Integra Layer Native Token",
+			DenomUnits: []*banktypes.DenomUnit{
+				{
+					Denom:    "airl",
+					Exponent: 0,
+				},
+				{
+					Denom:    "irl",
+					Exponent: 18,
+				},
+			},
+			Base:    "airl",
+			Display: "irl",
+			Name:    "IRL",
+			Symbol:  "IRL",
+		},
+	}
+
+	return bankGenState
 }

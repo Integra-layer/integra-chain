@@ -13,7 +13,6 @@ import (
 	dbm "github.com/cosmos/cosmos-db"
 	"github.com/cosmos/evm/testutil/integration/evm/network"
 	feemarkettypes "github.com/cosmos/evm/x/feemarket/types"
-	"github.com/cosmos/evm/x/vm/types"
 	ibctesting "github.com/cosmos/ibc-go/v10/testing"
 
 	"cosmossdk.io/log"
@@ -80,7 +79,7 @@ func Setup(t *testing.T, chainID string, evmChainID uint64) *IntegraApp {
 	acc := authtypes.NewBaseAccount(senderPrivKey.PubKey().Address().Bytes(), senderPrivKey.PubKey(), 0, 0)
 	balance := banktypes.Balance{
 		Address: acc.GetAddress().String(),
-		Coins:   sdk.NewCoins(sdk.NewCoin(types.DefaultEVMExtendedDenom, math.NewInt(100000000000000))),
+		Coins:   sdk.NewCoins(sdk.NewCoin(IntegraChainDenom, math.NewInt(100000000000000))),
 	}
 
 	app := SetupWithGenesisValSet(t, chainID, evmChainID, valSet, []authtypes.GenesisAccount{acc}, balance)

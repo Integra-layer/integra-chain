@@ -918,6 +918,10 @@ func (app *IntegraApp) DefaultGenesis() map[string]json.RawMessage {
 	distrGenState := NewDistributionGenesisState()
 	genesis[distrtypes.ModuleName] = app.appCodec.MustMarshalJSON(distrGenState)
 
+	// Bank: IRL denom metadata
+	bankGenState := NewBankGenesisState()
+	genesis[banktypes.ModuleName] = app.appCodec.MustMarshalJSON(bankGenState)
+
 	return genesis
 }
 

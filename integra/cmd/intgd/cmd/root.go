@@ -20,7 +20,6 @@ import (
 	"github.com/cosmos/evm/crypto/hd"
 	cosmosevmserver "github.com/cosmos/evm/server"
 	srvflags "github.com/cosmos/evm/server/flags"
-	"github.com/cosmos/evm/x/vm/types"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/store"
@@ -126,7 +125,7 @@ func NewRootCmd() *cobra.Command {
 				return err
 			}
 
-			customAppTemplate, customAppConfig := config.InitAppConfig(types.DefaultEVMExtendedDenom, integra.IntegraEVMChainID)
+			customAppTemplate, customAppConfig := config.InitAppConfig(integra.IntegraChainDenom, integra.IntegraEVMChainID)
 			customTMConfig := initCometConfig()
 
 			return sdkserver.InterceptConfigsPreRunHandler(cmd, customAppTemplate, customAppConfig, customTMConfig)
