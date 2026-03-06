@@ -19,7 +19,7 @@ describe("Distribution – deposit validator rewards pool", function () {
   });
 
   it("deposits rewards and emits DepositValidatorRewardsPool event", async function () {
-    const coin = { denom: "atest", amount: hre.ethers.parseEther("0.1") };
+    const coin = { denom: "airl", amount: hre.ethers.parseEther("0.1") };
 
     const beforeRewards =
       await distribution.validatorOutstandingRewards(VAL_BECH32);

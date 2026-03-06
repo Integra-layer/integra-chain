@@ -3,13 +3,14 @@
 package systemtests
 
 import (
+	"os"
 	"testing"
-
-	"cosmossdk.io/systemtests"
 )
 
 func TestMain(m *testing.M) {
-	systemtests.RunTests(m)
+	// Skip chain setup (systemtests.RunTests) since all tests are skipped.
+	// RunTests panics looking for the binary before any test can call t.Skip().
+	os.Exit(m.Run())
 }
 
 // TODO: System tests need to be fully ported from upstream cosmos/evm.

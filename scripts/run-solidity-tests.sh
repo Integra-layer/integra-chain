@@ -4,7 +4,7 @@ export GOPATH="$HOME"/go
 export PATH="$PATH":"$GOPATH"/bin
 
 # remove existing data
-rm -rf "$HOME"/.tmp-evmd-solidity-tests
+rm -rf "$HOME"/.tmp-intgd-solidity-tests
 
 # used to exit on first error (any non-zero exit code)
 set -e

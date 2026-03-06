@@ -184,7 +184,7 @@ function checkTestEnv() {
     )
     .describe("allowTests", "only run specified tests. Separated by comma.")
     .boolean("verbose-log")
-    .describe("verbose-log", "print evmd output, default false").argv;
+    .describe("verbose-log", "print intgd output, default false").argv;
 
   if (!fs.existsSync(path.join(__dirname, "./node_modules"))) {
     panic(
@@ -346,7 +346,7 @@ function setupNetwork({ runConfig, timeout }) {
 
   const spawnPromise = new Promise((resolve, reject) => {
     const serverStartedLog = "Starting JSON-RPC server";
-    const serverStartedMsg = "evmd started";
+    const serverStartedMsg = "intgd started";
 
     const rootDir = path.resolve(__dirname, "..", ".."); // → ".../evm"
     const scriptPath = path.join(rootDir, "local_node.sh"); // → ".../evm/local_node.sh"
@@ -356,7 +356,7 @@ function setupNetwork({ runConfig, timeout }) {
       stdio: ["ignore", "pipe", "pipe"], // <-- stdout/stderr streams
     });
 
-    logger.info(`Starting evmd process... timeout: ${timeout}ms`);
+    logger.info(`Starting intgd process... timeout: ${timeout}ms`);
     if (runConfig.verboseLog) {
       osdProc.stdout.pipe(process.stdout);
       osdProc.stderr.pipe(process.stderr);
@@ -388,7 +388,7 @@ function setupNetwork({ runConfig, timeout }) {
   });
 
   const timeoutPromise = new Promise((resolve, reject) => {
-    setTimeout(() => reject(new Error("Start evmd timeout!")), timeout);
+    setTimeout(() => reject(new Error("Start intgd timeout!")), timeout);
   });
   return Promise.race([spawnPromise, timeoutPromise]);
 }
