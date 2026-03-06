@@ -1,15 +1,11 @@
 // test/ViemFunctions.test.js
-const {
-  createPublicClient,
-  createWalletClient,
-  http,
-} = require("viem");
+const { createPublicClient, createWalletClient, http } = require("viem");
 const { privateKeyToAccount } = require("viem/accounts");
 const { expect } = require("chai");
 const tokenArtifact = require("./contractABI/TokenExample.json");
 
 require("dotenv").config();
-const chainId = process.env.CHAIN_ID || 262144; // Default to 262144 if not set
+const chainId = process.env.CHAIN_ID || 26217; // Default to Integra mainnet EVM chain ID
 
 describe("Viem Full Feature Test", function () {
   let publicClient,
@@ -28,7 +24,7 @@ describe("Viem Full Feature Test", function () {
 
     const privateKey = process.env.PRIVATE_KEY;
     walletAccount = privateKeyToAccount(
-      privateKey.startsWith("0x") ? privateKey : "0x" + privateKey
+      privateKey.startsWith("0x") ? privateKey : "0x" + privateKey,
     );
 
     walletClient = createWalletClient({
@@ -118,7 +114,7 @@ describe("Viem Full Feature Test", function () {
     const Txreceipt1 = await publicClient.waitForTransactionReceipt({
       hash: txHash1,
     });
-    
+
     // Get logs with block range to ensure we capture the recent transaction
     const logs = await publicClient.getLogs({
       abi: tokenArtifact.abi,
@@ -137,7 +133,7 @@ describe("Viem Full Feature Test", function () {
         { name: "amount", type: "uint256" },
         { name: "recipient", type: "address" },
       ],
-      [500, walletAccount.address]
+      [500, walletAccount.address],
     );
 
     const decoded = decodeAbiParameters(
@@ -145,7 +141,7 @@ describe("Viem Full Feature Test", function () {
         { name: "amount", type: "uint256" },
         { name: "recipient", type: "address" },
       ],
-      encoded
+      encoded,
     );
 
     expect(decoded[0]).to.equal(500n);
@@ -177,7 +173,7 @@ describe("Viem Full Feature Test", function () {
       } else {
         // Fallback if not a custom error
         expect(error.message).to.include(
-          'The contract function "transfer" reverted'
+          'The contract function "transfer" reverted',
         );
       }
     }
