@@ -11,6 +11,9 @@ import (
 	"cosmossdk.io/systemtests"
 )
 
+// BaseTestSuite is an alias for SystemTestSuite for backward compatibility.
+type BaseTestSuite = SystemTestSuite
+
 // SystemTestSuite implements the TestSuite interface and
 // provides methods for managing test lifecycle,
 // sending transactions, querying state,

@@ -12,7 +12,7 @@ import (
 
 	"github.com/cosmos/evm/crypto/hd"
 	"github.com/cosmos/evm/encoding"
-	"github.com/cosmos/evm/server/config"
+	integra "github.com/Integra-layer/integra-chain/integra"
 	"github.com/cosmos/evm/testutil"
 	utiltx "github.com/cosmos/evm/testutil/tx"
 
@@ -60,7 +60,7 @@ var _ = Describe("Ledger CLI and keyring functionality: ", func() {
 	Describe("Adding a key from ledger using the CLI", func() {
 		BeforeEach(func() {
 			krHome = s.T().TempDir()
-			encCfg = encoding.MakeConfig(config.DefaultEVMChainID)
+			encCfg = encoding.MakeConfig(integra.IntegraEVMChainID)
 
 			cmd = s.cosmosEVMAddKeyCmd()
 
@@ -109,7 +109,7 @@ var _ = Describe("Ledger CLI and keyring functionality: ", func() {
 	Describe("Singing a transactions", func() {
 		BeforeEach(func() {
 			krHome = s.T().TempDir()
-			encCfg = encoding.MakeConfig(config.DefaultEVMChainID)
+			encCfg = encoding.MakeConfig(integra.IntegraEVMChainID)
 
 			var err error
 

@@ -18,7 +18,7 @@ describe("Web3.js Compatibility Test", function () {
   });
 
   it("Should get chain ID", async function () {
-    expect(chainId).to.equal(26217); // Integra mainnet EVM chain ID
+    expect(chainId).to.equal(262144); // Adjust chainId as needed
   });
 
   it("Should fetch accounts", async function () {
@@ -47,12 +47,12 @@ describe("Web3.js Compatibility Test", function () {
 
   it("Should query Transfer event logs", async function () {
     this.timeout(30000);
-
+    
     // First perform a transfer to generate Transfer events
     const transferReceipt = await deployedToken.methods
       .transfer(accounts[1], 10)
       .send({ from: accounts[0], gas: 5000000 });
-
+    
     // Query Transfer events using the block number from the transfer
     const events = await deployedToken.getPastEvents("Transfer", {
       fromBlock: transferReceipt.blockNumber - 10,
@@ -84,7 +84,7 @@ describe("Web3.js Compatibility Test", function () {
         (msg) =>
           msg.includes("revert") ||
           msg.includes("VM Exception") ||
-          msg.includes("exceeds balance"),
+          msg.includes("exceeds balance")
       );
     }
   });

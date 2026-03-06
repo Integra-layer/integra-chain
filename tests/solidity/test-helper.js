@@ -40,9 +40,9 @@ function extractChainIDFromGo(goFilePath) {
     // Fallback to upstream config
     if (!fs.existsSync(goFilePath)) {
       logger.warn(
-        `Go config file not found at ${goFilePath}, using default chain ID: 26217`,
+        `Go config file not found at ${goFilePath}, using default chain ID: 262144`,
       );
-      return 26217;
+      return 262144;
     }
 
     const goFileContent = fs.readFileSync(goFilePath, "utf8");
@@ -56,13 +56,15 @@ function extractChainIDFromGo(goFilePath) {
       return chainId;
     }
 
-    logger.warn("DefaultEVMChainID not found in Go file, using default: 26217");
-    return 26217;
+    logger.warn(
+      "DefaultEVMChainID not found in Go file, using default: 262144",
+    );
+    return 262144;
   } catch (error) {
     logger.warn(
-      `Error reading Go config file: ${error.message}, using default: 26217`,
+      `Error reading Go config file: ${error.message}, using default: 262144`,
     );
-    return 26217;
+    return 262144;
   }
 }
 

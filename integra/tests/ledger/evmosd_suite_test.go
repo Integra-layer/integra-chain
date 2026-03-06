@@ -29,7 +29,6 @@ import (
 	"github.com/cosmos/evm/crypto/hd"
 	cosmosevmkeyring "github.com/cosmos/evm/crypto/keyring"
 	"github.com/cosmos/evm/encoding"
-	"github.com/cosmos/evm/testutil/constants"
 	utiltx "github.com/cosmos/evm/testutil/tx"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -86,12 +85,11 @@ func (suite *LedgerTestSuite) SetupTest() {
 func (suite *LedgerTestSuite) SetupEvmosApp() {
 	consAddress := sdk.ConsAddress(utiltx.GenerateAddress().Bytes())
 
-	// init app
-	chainID := constants.ExampleChainID
-	suite.app = integra.Setup(suite.T(), chainID.ChainID, chainID.EVMChainID)
+	// init app with Integra chain ID so airl denom metadata is registered
+	suite.app = integra.Setup(suite.T(), integra.Bech32Prefix+"-1", integra.IntegraEVMChainID)
 	suite.ctx = suite.app.NewContextLegacy(false, tmproto.Header{
 		Height:          1,
-		ChainID:         chainID.ChainID,
+		ChainID:         integra.Bech32Prefix + "-1",
 		Time:            time.Now().UTC(),
 		ProposerAddress: consAddress.Bytes(),
 
@@ -136,7 +134,7 @@ func (suite *LedgerTestSuite) NewKeyringAndCtxs(krHome string, input io.Reader, 
 		WithUseLedger(true).
 		WithKeyring(kr).
 		WithClient(mocks.MockCometRPC{Client: rpcclientmock.Client{}}).
-		WithChainID(constants.ExampleChainIDPrefix + "-13").
+		WithChainID(integra.Bech32Prefix + "-13").
 		WithSignModeStr(flags.SignModeLegacyAminoJSON)
 
 	srvCtx := server.NewDefaultContext()

@@ -10,31 +10,31 @@ module.exports = {
         enabled: true,
         runs: 200,
       },
-    },
+    }
   },
-  networks: {
-    localhost: {
-      url: "http://127.0.0.1:8545",
-    },
+  networks:{
+    localhost:{
+      url:"http://127.0.0.1:8545"
+    }
   },
   namedAccounts: {
     deployer: {
       default: 0,
-    },
+    }
   },
   etherscan: {
     apiKey: {
-      localhost: "empty",
+      localhost: 'empty'
     },
     customChains: [
       {
         network: "localhost",
-        chainId: 26217,
+        chainId: 262144,
         urls: {
           apiURL: "http://localhost/api",
-          browserURL: "http://localhost",
-        },
-      },
-    ],
+          browserURL: "http://localhost"
+        }
+      }
+    ]
   },
 };
