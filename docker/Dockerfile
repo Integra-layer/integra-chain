@@ -2,7 +2,7 @@
 # Multi-stage build: compile intgd from source, then copy into lean runtime.
 
 # ---- Stage 1: Build ----
-FROM golang:1.24-alpine AS builder
+FROM golang:1.23.8-alpine AS builder
 WORKDIR /work
 ENV PACKAGES="curl build-base git bash file linux-headers eudev-dev"
 RUN apk add --no-cache $PACKAGES
