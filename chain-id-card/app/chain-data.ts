@@ -128,7 +128,6 @@ export interface ChainSpec {
     evmRpc: string;
     evmWs: string;
     explorer: string;
-    evmExplorer: string;
   };
 }
 
@@ -381,7 +380,6 @@ export const chainSpecs: Record<Network, ChainSpec> = {
       evmRpc: "https://mainnet.integralayer.com/evm",
       evmWs: "wss://mainnet.integralayer.com/ws",
       explorer: "https://explorer.integralayer.com",
-      evmExplorer: "https://blockscout.integralayer.com",
     },
   },
   testnet: {
@@ -428,7 +426,6 @@ export const chainSpecs: Record<Network, ChainSpec> = {
       evmRpc: "https://testnet.integralayer.com/evm",
       evmWs: "wss://testnet.integralayer.com/ws",
       explorer: "https://testnet.explorer.integralayer.com",
-      evmExplorer: "https://testnet.blockscout.integralayer.com",
     },
   },
 };

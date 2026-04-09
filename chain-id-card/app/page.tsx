@@ -1127,11 +1127,6 @@ export default function Home() {
                 url={spec.endpoints.explorer}
                 tip="Browse blocks, transactions, and accounts"
               />
-              <EndpointRow
-                label="EVM Explorer"
-                url={spec.endpoints.evmExplorer}
-                tip="Ethereum-style block explorer (Blockscout)"
-              />
             </Card>
           </section>
         </div>
