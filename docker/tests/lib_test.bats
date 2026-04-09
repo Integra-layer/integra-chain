@@ -77,13 +77,19 @@ teardown() {
 
 # ---- configure_toml ----
 
+@test "set_network_config: mainnet has persistent peers" {
+  set_network_config "1"
+  [ -n "$SEEDS" ]
+  [[ "$SEEDS" == *"89.167.88.24"* ]]
+}
+
 @test "configure_toml: sets minimum-gas-prices in app.toml" {
   echo 'minimum-gas-prices = ""' > "$TEST_HOME/config/app.toml"
   echo 'evm_chain_id = "262144"' >> "$TEST_HOME/config/app.toml"
   echo -e '[api]\nenable = false\n[next]' >> "$TEST_HOME/config/app.toml"
-  echo -e '[json-rpc]\nenable = false\n[next2]' >> "$TEST_HOME/config/app.toml"
+  echo -e '[json-rpc]\nenable = false\naddress = "127.0.0.1:8545"\nws-address = "127.0.0.1:8546"\n[next2]' >> "$TEST_HOME/config/app.toml"
   echo 'chain-id = ""' > "$TEST_HOME/config/client.toml"
-  echo 'persistent_peers = ""' > "$TEST_HOME/config/config.toml"
+  echo -e 'persistent_peers = ""\nladdr = "tcp://127.0.0.1:26657"' > "$TEST_HOME/config/config.toml"
 
   configure_toml "$TEST_HOME" "integra-1" "26217" "airl" ""
 
@@ -94,14 +100,44 @@ teardown() {
   echo 'minimum-gas-prices = ""' > "$TEST_HOME/config/app.toml"
   echo 'evm_chain_id = "262144"' >> "$TEST_HOME/config/app.toml"
   echo -e '[api]\nenable = false\n[next]' >> "$TEST_HOME/config/app.toml"
-  echo -e '[json-rpc]\nenable = false\n[next2]' >> "$TEST_HOME/config/app.toml"
+  echo -e '[json-rpc]\nenable = false\naddress = "127.0.0.1:8545"\nws-address = "127.0.0.1:8546"\n[next2]' >> "$TEST_HOME/config/app.toml"
   echo 'chain-id = ""' > "$TEST_HOME/config/client.toml"
-  echo 'persistent_peers = ""' > "$TEST_HOME/config/config.toml"
+  echo -e 'persistent_peers = ""\nladdr = "tcp://127.0.0.1:26657"' > "$TEST_HOME/config/config.toml"
 
   configure_toml "$TEST_HOME" "integra-1" "26217" "airl" ""
 
   grep -q 'evm_chain_id = "26217"' "$TEST_HOME/config/app.toml"
   ! grep -q 'evm_chain_id = "262144"' "$TEST_HOME/config/app.toml"
+}
+
+@test "configure_toml: binds JSON-RPC and RPC to 0.0.0.0 for Docker" {
+  echo 'minimum-gas-prices = ""' > "$TEST_HOME/config/app.toml"
+  echo 'evm_chain_id = "262144"' >> "$TEST_HOME/config/app.toml"
+  echo -e '[api]\nenable = false\n[next]' >> "$TEST_HOME/config/app.toml"
+  echo -e '[json-rpc]\nenable = false\naddress = "127.0.0.1:8545"\nws-address = "127.0.0.1:8546"\n[next2]' >> "$TEST_HOME/config/app.toml"
+  echo 'chain-id = ""' > "$TEST_HOME/config/client.toml"
+  echo -e 'persistent_peers = ""\nladdr = "tcp://127.0.0.1:26657"' > "$TEST_HOME/config/config.toml"
+
+  configure_toml "$TEST_HOME" "integra-1" "26217" "airl" ""
+
+  grep -q 'address = "0.0.0.0:8545"' "$TEST_HOME/config/app.toml"
+  grep -q 'ws-address = "0.0.0.0:8546"' "$TEST_HOME/config/app.toml"
+  grep -q 'laddr = "tcp://0.0.0.0:26657"' "$TEST_HOME/config/config.toml"
+}
+
+@test "configure_toml: is idempotent (safe to run twice)" {
+  echo 'minimum-gas-prices = "5000000000000airl"' > "$TEST_HOME/config/app.toml"
+  echo 'evm_chain_id = "26217"' >> "$TEST_HOME/config/app.toml"
+  echo -e '[api]\nenable = true\n[next]' >> "$TEST_HOME/config/app.toml"
+  echo -e '[json-rpc]\nenable = true\naddress = "0.0.0.0:8545"\nws-address = "0.0.0.0:8546"\n[next2]' >> "$TEST_HOME/config/app.toml"
+  echo 'chain-id = "integra-1"' > "$TEST_HOME/config/client.toml"
+  echo -e 'persistent_peers = "old@1.2.3.4:26656"\nladdr = "tcp://0.0.0.0:26657"' > "$TEST_HOME/config/config.toml"
+
+  configure_toml "$TEST_HOME" "integra-1" "26217" "airl" "new@5.6.7.8:26656"
+
+  grep -q 'persistent_peers = "new@5.6.7.8:26656"' "$TEST_HOME/config/config.toml"
+  grep -q 'minimum-gas-prices = "5000000000000airl"' "$TEST_HOME/config/app.toml"
+  grep -q 'evm_chain_id = "26217"' "$TEST_HOME/config/app.toml"
 }
 
 @test "configure_toml: sets chain-id in client.toml" {

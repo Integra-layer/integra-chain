@@ -11,7 +11,7 @@ set_network_config() {
     EVM_CHAIN_ID="26217"
     DENOM="airl"
     RPC_URL="https://mainnet.integralayer.com/rpc"
-    SEEDS=""  # TBD after mainnet launch
+    SEEDS="837a39f482a80b56f491737055fe52199006f1fd@89.167.88.24:26656,adeaabdac580df25d3766d6f1950e30c1aba2f1c@45.77.139.208:36656,91d0540496a97bf071d7fd44458b1c00a2515af3@159.223.206.94:36656,9c953486b7e73d0028ef63589605926213471ef3@3.208.92.57:26656"
   else
     CHAIN_ID="integra-testnet-1"
     EVM_CHAIN_ID="26218"
@@ -30,19 +30,20 @@ commission_to_decimal() {
 
 # configure_toml <home_dir> <chain_id> <evm_chain_id> <denom> [seeds]
 # Applies sed patches to config.toml, app.toml, client.toml.
+# Idempotent: safe to run multiple times.
 configure_toml() {
   local home="$1" chain_id="$2" evm_chain_id="$3" denom="$4" seeds="${5:-}"
 
-  # persistent_peers
+  # persistent_peers (replace any existing value)
   if [ -n "$seeds" ]; then
-    sed -i'' -e "s/persistent_peers = \"\"/persistent_peers = \"${seeds}\"/" "$home/config/config.toml"
+    sed -i'' -e "s|persistent_peers = \"[^\"]*\"|persistent_peers = \"${seeds}\"|" "$home/config/config.toml"
   fi
 
-  # minimum-gas-prices
-  sed -i'' -e "s/minimum-gas-prices = \"\"/minimum-gas-prices = \"5000000000000${denom}\"/" "$home/config/app.toml"
+  # minimum-gas-prices (replace any existing value)
+  sed -i'' -e "s|minimum-gas-prices = \"[^\"]*\"|minimum-gas-prices = \"5000000000000${denom}\"|" "$home/config/app.toml"
 
-  # evm_chain_id (fix the default 262144)
-  sed -i'' -e "s/evm_chain_id = \"262144\"/evm_chain_id = \"${evm_chain_id}\"/" "$home/config/app.toml"
+  # evm_chain_id (replace any value, not just 262144)
+  sed -i'' -e "s|evm_chain_id = \"[^\"]*\"|evm_chain_id = \"${evm_chain_id}\"|" "$home/config/app.toml"
 
   # Enable REST API
   sed -i'' -e '/\[api\]/,/\[/ s/enable = false/enable = true/' "$home/config/app.toml"
@@ -50,8 +51,15 @@ configure_toml() {
   # Enable JSON-RPC
   sed -i'' -e '/\[json-rpc\]/,/\[/ s/enable = false/enable = true/' "$home/config/app.toml"
 
-  # client.toml chain-id
-  sed -i'' -e "s/chain-id = \"\"/chain-id = \"${chain_id}\"/" "$home/config/client.toml"
+  # Bind JSON-RPC to all interfaces (for Docker)
+  sed -i'' -e '/\[json-rpc\]/,/\[/ s|address = "127.0.0.1:8545"|address = "0.0.0.0:8545"|' "$home/config/app.toml"
+  sed -i'' -e '/\[json-rpc\]/,/\[/ s|ws-address = "127.0.0.1:8546"|ws-address = "0.0.0.0:8546"|' "$home/config/app.toml"
+
+  # Bind RPC to all interfaces (for Docker)
+  sed -i'' -e 's|laddr = "tcp://127.0.0.1:26657"|laddr = "tcp://0.0.0.0:26657"|' "$home/config/config.toml"
+
+  # client.toml chain-id (replace any value)
+  sed -i'' -e "s|chain-id = \"[^\"]*\"|chain-id = \"${chain_id}\"|" "$home/config/client.toml"
 }
 
 # configure_state_sync <home_dir> <rpc_url> <trust_height> <trust_hash>

@@ -4,11 +4,19 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     container_name: integra-validator
+    environment:
+      # Set MONIKER to skip the interactive wizard
+      - MONIKER=${MONIKER:-}
+      - NETWORK=${NETWORK:-mainnet}
+      - STATE_SYNC=${STATE_SYNC:-false}
+      - PEERS=${PEERS:-}
     ports:
-      - "26656:26656"
-      - "26657:26657"
-      - "8545:8545"
-      - "1317:1317"
+      - "26656:26656"   # P2P
+      - "26657:26657"   # CometBFT RPC
+      - "8545:8545"     # EVM JSON-RPC
+      - "8546:8546"     # EVM WebSocket
+      - "1317:1317"     # Cosmos REST
+      - "9090:9090"     # gRPC
     volumes:
       - integra-data:/root/.intgd
     restart: unless-stopped

@@ -136,19 +136,21 @@ fi
 echo -e "\n${CYAN}Configuring node...${NC}"
 configure_toml /root/.intgd "$CHAIN_ID" "$EVM_CHAIN_ID" "$DENOM" "$SEEDS"
 
-# State sync (for fast catch-up on existing chains)
-if [ "$GENESIS_CHOICE" = "1" ]; then
-  LATEST_HEIGHT=$(curl -sf "${RPC_URL}/block" | jq -r '.result.block.header.height' 2>/dev/null || echo "0")
-  if [ "$LATEST_HEIGHT" -gt 1000 ] 2>/dev/null; then
-    TRUST_HEIGHT=$((LATEST_HEIGHT - 1000))
-    TRUST_HASH=$(curl -sf "${RPC_URL}/block?height=${TRUST_HEIGHT}" | jq -r '.result.block_id.hash' 2>/dev/null || echo "")
-
-    if [ -n "$TRUST_HASH" ] && [ "$TRUST_HASH" != "null" ]; then
-      configure_state_sync /root/.intgd "$RPC_URL" "$TRUST_HEIGHT" "$TRUST_HASH"
-      echo -e "${GREEN}State sync enabled (trust height: ${TRUST_HEIGHT})${NC}"
-    fi
-  fi
-fi
+# State sync (currently disabled — mainnet snapshots not available)
+# Block sync takes ~15-30 min and is more reliable.
+# Uncomment below when snapshot infrastructure is ready.
+# if [ "$GENESIS_CHOICE" = "1" ]; then
+#   LATEST_HEIGHT=$(curl -sf "${RPC_URL}/block" | jq -r '.result.block.header.height' 2>/dev/null || echo "0")
+#   if [ "$LATEST_HEIGHT" -gt 1000 ] 2>/dev/null; then
+#     TRUST_HEIGHT=$((LATEST_HEIGHT - 1000))
+#     TRUST_HASH=$(curl -sf "${RPC_URL}/block?height=${TRUST_HEIGHT}" | jq -r '.result.block_id.hash' 2>/dev/null || echo "")
+#     if [ -n "$TRUST_HASH" ] && [ "$TRUST_HASH" != "null" ]; then
+#       configure_state_sync /root/.intgd "$RPC_URL" "$TRUST_HEIGHT" "$TRUST_HASH"
+#       echo -e "${GREEN}State sync enabled (trust height: ${TRUST_HEIGHT})${NC}"
+#     fi
+#   fi
+# fi
+echo -e "${YELLOW}Note: Block sync will be used (state sync not yet available). This may take 15-30 minutes.${NC}"
 
 echo -e "${GREEN}Node configured${NC}"
 
