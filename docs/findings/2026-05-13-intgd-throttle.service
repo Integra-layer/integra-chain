@@ -1,0 +1,28 @@
+[Unit]
+Description=Caddy throttle autoscaler for Integra testnet validator
+Documentation=file:///root/docs/2026-05-13-throttle-autoscaler-spec.md
+After=intgd.service caddy.service
+Wants=intgd.service caddy.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/intgd-throttle.py
+Restart=always
+RestartSec=10s
+
+# Run as root because we need to write /etc/caddy/Caddyfile and call systemctl reload caddy.
+# The daemon is small and audited; tightening to a dedicated user is a v2 cleanup.
+User=root
+
+# Safety: limit resource usage so the autoscaler can never become the problem itself.
+MemoryMax=200M
+TasksMax=20
+CPUQuota=10%
+
+# Logging to journald.
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=intgd-throttle
+
+[Install]
+WantedBy=multi-user.target

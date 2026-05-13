@@ -1,0 +1,905 @@
+=== TS=20260513T122757Z HOST=testnet-gateway PID=329272 ===
+
+===== 1. PROCESS / MEMORY =====
+--- systemctl status ---
+● intgd.service - Integra Testnet Node (Gateway)
+     Loaded: loaded (/etc/systemd/system/intgd.service; enabled; preset: enabled)
+     Active: active (running) since Wed 2026-05-13 03:30:25 UTC; 8h ago
+   Main PID: 329272 (intgd)
+      Tasks: 224 (limit: 18684)
+     Memory: 10.0G (peak: 11.0G swap: 702.2M swap peak: 934.2M)
+        CPU: 2d 9h 17min 43.830s
+     CGroup: /system.slice/intgd.service
+             └─329272 /usr/local/bin/intgd start
+
+May 13 12:27:53 testnet-gateway intgd[329272]: 12:27PM ERR failed to broadcast tx error="replacement transaction underpriced: internal" module=backend
+May 13 12:27:53 testnet-gateway intgd[329272]: 12:27PM ERR failed to broadcast tx error="replacement transaction underpriced: internal" module=backend
+May 13 12:27:53 testnet-gateway intgd[329272]: 12:27PM ERR failed to broadcast tx error="replacement transaction underpriced: internal" module=backend
+May 13 12:27:54 testnet-gateway intgd[329272]: 12:27PM ERR failed to broadcast tx error="replacement transaction underpriced: internal" module=backend
+May 13 12:27:54 testnet-gateway intgd[329272]: 12:27PM ERR failed to broadcast tx error="replacement transaction underpriced: internal" module=backend
+May 13 12:27:54 testnet-gateway intgd[329272]: 12:27PM ERR failed to broadcast tx error="replacement transaction underpriced: internal" module=backend
+May 13 12:27:56 testnet-gateway intgd[329272]: 12:27PM INF Ensure peers module=pex numDialing=0 numInPeers=1 numOutPeers=1 numToDial=9 server=node
+May 13 12:27:56 testnet-gateway intgd[329272]: 12:27PM INF We need more addresses. Sending pexRequest to random peer module=pex peer="Peer{MConn{45.77.139.208:56884} 1d215b882540caf56adf5d4279f377b57dfecac5 in}" server=node
+May 13 12:27:56 testnet-gateway intgd[329272]: 12:27PM INF No addresses to dial. Falling back to seeds module=pex server=node
+May 13 12:27:56 testnet-gateway intgd[329272]: 12:27PM ERR failed to broadcast tx error="replacement transaction underpriced: internal" module=backend
+
+--- free -m ---
+               total        used        free      shared  buff/cache   available
+Mem:           15608       11585         294         281        4378        4022
+Swap:           4095        1988        2107
+
+--- swapon --show ---
+NAME      TYPE SIZE USED PRIO
+/swapfile file   4G 1.9G   -2
+
+--- ps for intgd ---
+    PID   RSS    VSZ    SZ NLWP     ELAPSED STAT COMMAND
+ 329272 8799220 17797908 4449477 224 08:57:32 Ssl intgd
+
+--- /proc/329272/status ---
+VmPeak:	17797908 kB
+VmHWM:	10161184 kB
+VmRSS:	 8799220 kB
+VmData:	12425040 kB
+VmSwap:	  564584 kB
+Threads:	224
+
+--- /proc/329272/smaps_rollup ---
+Rss:             8799308 kB
+Pss:             8797536 kB
+Pss_Dirty:       8750168 kB
+Pss_Anon:        8762284 kB
+Pss_File:          35252 kB
+Pss_Shmem:             0 kB
+Private_Clean:     47320 kB
+Private_Dirty:   8750168 kB
+Anonymous:       8762284 kB
+Private_Hugetlb:       0 kB
+Swap:             564584 kB
+SwapPss:          564584 kB
+
+===== 2. JOURNAL (last 1h) =====
+journal lines: 12783
+
+--- counts ---
+Timed out:                                  429
+ERR:                                        8419
+panic (should be 0):                        0
+replacement transaction underpriced:        8166
+nonce too low:                              70
+consensus failure:                          0
+oom / out of memory:                        0
+RoundStepPropose:                           244
+compaction:                                 0
+
+--- last 20 ERR lines (deduped) ---
+   8166 failed to broadcast tx error="replacement transaction underpriced: internal" module=backend
+     44 failed to broadcast tx error="failed to check sender balance: sender balance < tx cost (199007375000000000 < 273125000000000000): insufficient funds: insufficient funds" module=backend
+      7 failed to broadcast tx error=": tx already in mempool" module=backend
+      3 failed to LoadFinalizeBlockResponse err="could not find results for height #1171332" module=rpc server=node
+      3 failed to LoadFinalizeBlockResponse err="could not find results for height #1171284" module=rpc server=node
+      3 failed to broadcast tx error="nonce too low: next nonce 445, tx nonce 444: internal" module=backend
+      3 failed to broadcast tx error="nonce too low: next nonce 428, tx nonce 427: internal" module=backend
+      2 failed to LoadFinalizeBlockResponse err="could not find results for height #1170920" module=rpc server=node
+      2 failed to broadcast tx error="nonce too low: next nonce 8, tx nonce 7: internal" module=backend
+      2 failed to broadcast tx error="nonce too low: next nonce 6, tx nonce 5: internal" module=backend
+      2 failed to broadcast tx error="nonce too low: next nonce 56, tx nonce 55: internal" module=backend
+      2 failed to broadcast tx error="nonce too low: next nonce 498, tx nonce 497: internal" module=backend
+      2 failed to broadcast tx error="nonce too low: next nonce 496, tx nonce 495: internal" module=backend
+      2 failed to broadcast tx error="nonce too low: next nonce 478, tx nonce 477: internal" module=backend
+      2 failed to broadcast tx error="nonce too low: next nonce 459, tx nonce 458: internal" module=backend
+      2 failed to broadcast tx error="nonce too low: next nonce 457, tx nonce 456: internal" module=backend
+      2 failed to broadcast tx error="failed to check sender balance: sender balance < tx cost (12430225000000000000 < 13731016875000000000): insufficient funds: insufficient funds" module=backend
+      2 failed to broadcast tx error="failed to check sender balance: sender balance < tx cost (12226408750000000000 < 13731271875000000000): insufficient funds: insufficient funds" module=backend
+      1 Stopping peer for error err="peer (1d215b882540caf56adf5d4279f377b57dfecac5) sent next PEX request too soon. lastReceived: 2026-05-13 11:55:23.107061515 +0000 UTC m=+30297.631045229, now: 2026-05-13 11:55:26.454669869 +0000 UTC m=+30300.978653583, minInterval: 10s. Disconnecting" module=p2p peer="Peer{MConn{45.77.139.208:26656} 1d215b882540caf56adf5d4279f377b57dfecac5 out}" server=node
+      1 failed to process message err="error part set invalid proof" height=1171329 module=consensus msg_type=*consensus.BlockPartMessage peer=1d215b882540caf56adf5d4279f377b57dfecac5 round=0 server=node
+
+--- last 10 Timed out lines ---
+May 13 12:26:01 testnet-gateway intgd[329272]: 12:26PM INF Timed out dur=-4014.824998 height=1171350 module=consensus round=0 server=node step=RoundStepNewHeight
+May 13 12:26:06 testnet-gateway intgd[329272]: 12:26PM INF Timed out dur=3000 height=1171351 module=consensus round=0 server=node step=RoundStepPropose
+May 13 12:26:20 testnet-gateway intgd[329272]: 12:26PM INF Timed out dur=-11918.365785 height=1171352 module=consensus round=0 server=node step=RoundStepNewHeight
+May 13 12:26:31 testnet-gateway intgd[329272]: 12:26PM INF Timed out dur=3000 height=1171355 module=consensus round=0 server=node step=RoundStepPropose
+May 13 12:26:37 testnet-gateway intgd[329272]: 12:26PM INF Timed out dur=-3844.567954 height=1171356 module=consensus round=0 server=node step=RoundStepNewHeight
+May 13 12:26:40 testnet-gateway intgd[329272]: 12:26PM INF Timed out dur=3000 height=1171356 module=consensus round=0 server=node step=RoundStepPropose
+May 13 12:27:05 testnet-gateway intgd[329272]: 12:27PM INF Timed out dur=3500 height=1171356 module=consensus round=1 server=node step=RoundStepPropose
+May 13 12:27:13 testnet-gateway intgd[329272]: 12:27PM INF Timed out dur=-6277.15329 height=1171357 module=consensus round=0 server=node step=RoundStepNewHeight
+May 13 12:27:19 testnet-gateway intgd[329272]: 12:27PM INF Timed out dur=3000 height=1171358 module=consensus round=0 server=node step=RoundStepPropose
+May 13 12:27:24 testnet-gateway intgd[329272]: 12:27PM INF Timed out dur=3500 height=1171359 module=consensus round=1 server=node step=RoundStepPropose
+
+===== 3. KERNEL OOM (24h) =====
+May 13 03:30:21 testnet-gateway kernel: caddy invoked oom-killer: gfp_mask=0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), order=0, oom_score_adj=0
+May 13 03:30:21 testnet-gateway kernel:  oom_kill_process+0x118/0x280
+May 13 03:30:21 testnet-gateway kernel:  ? oom_evaluate_task+0x143/0x1e0
+May 13 03:30:21 testnet-gateway kernel:  __alloc_pages_may_oom+0x10c/0x1d0
+May 13 03:30:21 testnet-gateway kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+May 13 03:30:21 testnet-gateway kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=caddy.service,mems_allowed=0,global_oom,task_memcg=/system.slice/intgd.service,task=intgd,pid=1789442,uid=0
+May 13 03:30:21 testnet-gateway kernel: Out of memory: Killed process 1789442 (intgd) total-vm:16196016kB, anon-rss:9818312kB, file-rss:2816kB, shmem-rss:0kB, UID:0 pgtables:20328kB oom_score_adj:0
+
+===== 4. CHAIN LIVENESS (3 samples 30s apart) =====
+--- sample 1 @ 12:28:00Z ---
+{"jsonrpc":"2.0","id":-1,"result":{"node_info":{"protocol_version":{"p2p":"8","block":"11","app":"0"},"id":"10d16647b0476d5405ceeb20347437a70da0c0b1","listen_addr":"46.225.231.81:26656","network":"integra-testnet-1","version":"0.38.19","channels":"40202122233038606100","moniker":"Integra-Helsinki","other":{"tx_index":"on","rpc_address":"tcp://127.0.0.1:26657"}},"sync_info":{"latest_block_hash":"456FF95F58C1AC4A9926DECD80E4C2D8A4040E4A162F67E20EA2BB8E86C92230","latest_app_hash":"2729B04C5564597DD3582DD774FFC6C193AF27965C399F442351D0E5345CBB74","latest_block_height":"1171359","latest_block_time":"2026-05-13T12:20:07.259852552Z","earliest_block_hash":"D7A76AD69FB152CB7A253B177C52B8954E486ECB3A93846BF75BA9162437FF94","earliest_app_hash":"E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855","earliest_block_height":"1","earliest_block_time":"2026-02-26T20:09:39.217727835Z","catching_up":false},"validator_info":{"address":"E52BA176B57A836EA710381C1C95B7DBDEF6B2C1","pub_key":{"type":"tendermint/PubKeyEd25519","value":"mkCun/o5hNRAv2AROuOdl3xP9KhQr9GMXol6Fk7wZQ4="},"voting_power":"200232886"}}}
+--- sample 2 @ 12:28:30Z ---
+{"jsonrpc":"2.0","id":-1,"result":{"node_info":{"protocol_version":{"p2p":"8","block":"11","app":"0"},"id":"10d16647b0476d5405ceeb20347437a70da0c0b1","listen_addr":"46.225.231.81:26656","network":"integra-testnet-1","version":"0.38.19","channels":"40202122233038606100","moniker":"Integra-Helsinki","other":{"tx_index":"on","rpc_address":"tcp://127.0.0.1:26657"}},"sync_info":{"latest_block_hash":"7A22DA211B36F93CDCF10FB8C451392F1336B556B97400504237E9A68D8A0085","latest_app_hash":"029B802B431FFBB24970C27E5B6DADBED812F0DFE8A3964EB0C2418596EF5371","latest_block_height":"1171361","latest_block_time":"2026-05-13T12:20:22.366246434Z","earliest_block_hash":"D7A76AD69FB152CB7A253B177C52B8954E486ECB3A93846BF75BA9162437FF94","earliest_app_hash":"E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855","earliest_block_height":"1","earliest_block_time":"2026-02-26T20:09:39.217727835Z","catching_up":false},"validator_info":{"address":"E52BA176B57A836EA710381C1C95B7DBDEF6B2C1","pub_key":{"type":"tendermint/PubKeyEd25519","value":"mkCun/o5hNRAv2AROuOdl3xP9KhQr9GMXol6Fk7wZQ4="},"voting_power":"200232886"}}}
+--- sample 3 @ 12:29:00Z ---
+{"jsonrpc":"2.0","id":-1,"result":{"node_info":{"protocol_version":{"p2p":"8","block":"11","app":"0"},"id":"10d16647b0476d5405ceeb20347437a70da0c0b1","listen_addr":"46.225.231.81:26656","network":"integra-testnet-1","version":"0.38.19","channels":"40202122233038606100","moniker":"Integra-Helsinki","other":{"tx_index":"on","rpc_address":"tcp://127.0.0.1:26657"}},"sync_info":{"latest_block_hash":"BAEA52C8754928B79C4C4D24226FBA85268AABC89744A4CA0F9497FC58915F85","latest_app_hash":"B99664A8D74AE300872567123FDC34AF711845286DC0320D67313745CB5B4833","latest_block_height":"1171363","latest_block_time":"2026-05-13T12:20:37.891847014Z","earliest_block_hash":"D7A76AD69FB152CB7A253B177C52B8954E486ECB3A93846BF75BA9162437FF94","earliest_app_hash":"E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855","earliest_block_height":"1","earliest_block_time":"2026-02-26T20:09:39.217727835Z","catching_up":false},"validator_info":{"address":"E52BA176B57A836EA710381C1C95B7DBDEF6B2C1","pub_key":{"type":"tendermint/PubKeyEd25519","value":"mkCun/o5hNRAv2AROuOdl3xP9KhQr9GMXol6Fk7wZQ4="},"voting_power":"200232886"}}}
+
+===== 5. TOPOLOGY / PEERS =====
+--- /validators?height=latest (first 200 lines) ---
+{"jsonrpc":"2.0","id":-1,"error":{"code":-32602,"message":"Invalid params","data":"error converting http params to arguments: invalid 64-bit integer encoding \"latest\", expected string"}}
+--- /net_info (first 100 lines) ---
+{"jsonrpc":"2.0","id":-1,"result":{"listening":true,"listeners":["Listener(@46.225.231.81:26656)"],"n_peers":"2","peers":[{"node_info":{"protocol_version":{"p2p":"8","block":"11","app":"0"},"id":"bee94426ebd65dd3ee7ab56b8fcebf7f1b1585e7","listen_addr":"159.223.206.94:26656","network":"integra-testnet-1","version":"0.38.19","channels":"40202122233038606100","moniker":"Integra-SantaClara","other":{"tx_index":"off","rpc_address":"tcp://127.0.0.1:26657"}},"is_outbound":true,"connection_status":{"Duration":"4093439217151","SendMonitor":{"Start":"2026-05-13T11:20:51.16Z","Bytes":"2959458","Samples":"5845","InstRate":"318","CurRate":"1033","AvgRate":"723","PeakRate":"552908","BytesRem":"0","Duration":"4093440000000","Idle":"1120000000","TimeRem":"0","Progress":0,"Active":true},"RecvMonitor":{"Start":"2026-05-13T11:20:51.16Z","Bytes":"6326881","Samples":"2144","InstRate":"0","CurRate":"0","AvgRate":"1546","PeakRate":"253630","BytesRem":"0","Duration":"4093440000000","Idle":"14280000000","TimeRem":"0","Progress":0,"Active":true},"Channels":[{"ID":48,"SendQueueCapacity":"1","SendQueueSize":"0","Priority":"5","RecentlySent":"8816"},{"ID":64,"SendQueueCapacity":"1000","SendQueueSize":"0","Priority":"5","RecentlySent":"0"},{"ID":32,"SendQueueCapacity":"100","SendQueueSize":"0","Priority":"6","RecentlySent":"72"},{"ID":33,"SendQueueCapacity":"100","SendQueueSize":"0","Priority":"10","RecentlySent":"0"},{"ID":34,"SendQueueCapacity":"100","SendQueueSize":"0","Priority":"7","RecentlySent":"0"},{"ID":35,"SendQueueCapacity":"2","SendQueueSize":"0","Priority":"1","RecentlySent":"38"},{"ID":56,"SendQueueCapacity":"1","SendQueueSize":"0","Priority":"6","RecentlySent":"0"},{"ID":96,"SendQueueCapacity":"10","SendQueueSize":"0","Priority":"5","RecentlySent":"0"},{"ID":97,"SendQueueCapacity":"10","SendQueueSize":"0","Priority":"3","RecentlySent":"0"},{"ID":0,"SendQueueCapacity":"10","SendQueueSize":"0","Priority":"1","RecentlySent":"0"}]},"remote_ip":"159.223.206.94"},{"node_info":{"protocol_version":{"p2p":"8","block":"11","app":"0"},"id":"1d215b882540caf56adf5d4279f377b57dfecac5","listen_addr":"45.77.139.208:26656","network":"integra-testnet-1","version":"0.38.19","channels":"40202122233038606100","moniker":"Integra-Amsterdam","other":{"tx_index":"off","rpc_address":"tcp://127.0.0.1:26657"}},"is_outbound":false,"connection_status":{"Duration":"2018088062927","SendMonitor":{"Start":"2026-05-13T11:55:26.52Z","Bytes":"1460571","Samples":"2707","InstRate":"318","CurRate":"1033","AvgRate":"724","PeakRate":"804643","BytesRem":"0","Duration":"2018080000000","Idle":"1120000000","TimeRem":"0","Progress":0,"Active":true},"RecvMonitor":{"Start":"2026-05-13T11:55:26.52Z","Bytes":"2763826","Samples":"1191","InstRate":"0","CurRate":"0","AvgRate":"1370","PeakRate":"171290","BytesRem":"0","Duration":"2018080000000","Idle":"14520000000","TimeRem":"0","Progress":0,"Active":true},"Channels":[{"ID":48,"SendQueueCapacity":"1","SendQueueSize":"0","Priority":"5","RecentlySent":"7929"},{"ID":64,"SendQueueCapacity":"1000","SendQueueSize":"0","Priority":"5","RecentlySent":"0"},{"ID":32,"SendQueueCapacity":"100","SendQueueSize":"0","Priority":"6","RecentlySent":"57"},{"ID":33,"SendQueueCapacity":"100","SendQueueSize":"0","Priority":"10","RecentlySent":"0"},{"ID":34,"SendQueueCapacity":"100","SendQueueSize":"0","Priority":"7","RecentlySent":"0"},{"ID":35,"SendQueueCapacity":"2","SendQueueSize":"0","Priority":"1","RecentlySent":"20"},{"ID":56,"SendQueueCapacity":"1","SendQueueSize":"0","Priority":"6","RecentlySent":"0"},{"ID":96,"SendQueueCapacity":"10","SendQueueSize":"0","Priority":"5","RecentlySent":"0"},{"ID":97,"SendQueueCapacity":"10","SendQueueSize":"0","Priority":"3","RecentlySent":"0"},{"ID":0,"SendQueueCapacity":"10","SendQueueSize":"0","Priority":"1","RecentlySent":"2"}]},"remote_ip":"45.77.139.208"}]}}
+--- /num_unconfirmed_txs ---
+{"jsonrpc":"2.0","id":-1,"result":{"n_txs":"756","total":"756","total_bytes":"309555","txs":null}}
+--- intgd query staking validators (top 5) ---
+{
+  "validators": [
+    {
+      "operator_address": "integravaloper1gn3arhpev8sw9pp96hevsv0t8mj9cd5wgl8vg5",
+      "consensus_pubkey": {
+        "type": "/cosmos.crypto.ed25519.PubKey",
+        "value": "1mc2+OQsKhk5h8Paf/5BoCElLXz7vsWMRWCfY5/4WgI="
+      },
+      "status": "BOND_STATUS_BONDED",
+      "tokens": "200361482216334681516300000",
+      "delegator_shares": "200361482216334681516300000.000000000000000000",
+      "description": {
+        "moniker": "Integra-SantaClara"
+      },
+      "unbonding_time": "1970-01-01T00:00:00Z",
+      "commission": {
+        "commission_rates": {
+          "rate": "0.050000000000000000",
+          "max_rate": "0.200000000000000000",
+          "max_change_rate": "0.010000000000000000"
+        },
+        "update_time": "2026-02-26T20:09:39.217727835Z"
+      },
+      "min_self_delegation": "1"
+    },
+    {
+      "operator_address": "integravaloper12yw8rh97pp85stw43jknpx8m6a6gfpzcxxhtek",
+      "consensus_pubkey": {
+        "type": "/cosmos.crypto.ed25519.PubKey",
+        "value": "wO1w+lHNuCG3bgDRqvJjuLNixn9LpQHYW462W/yqOuw="
+      },
+      "jailed": true,
+      "status": "BOND_STATUS_UNBONDING",
+      "tokens": "59655811042607767000001",
+      "delegator_shares": "59691616666065620544782.979016743009776493",
+      "description": {
+        "moniker": "integralayer-local"
+      },
+      "unbonding_height": "1106803",
+      "unbonding_time": "2026-05-30T02:18:18.273688544Z",
+      "commission": {
+        "commission_rates": {
+          "rate": "0.050000000000000000",
+          "max_rate": "0.200000000000000000",
+          "max_change_rate": "0.010000000000000000"
+        },
+        "update_time": "2026-05-03T12:22:10.914939181Z"
+      },
+      "min_self_delegation": "1",
+      "unbonding_ids": [
+        "14",
+        "15",
+        "17",
+        "21",
+        "25",
+        "29"
+      ]
+    },
+    {
+      "operator_address": "integravaloper1wry6d9njdpacwnj2mpt82wwln7hcagy9hwue3t",
+      "consensus_pubkey": {
+        "type": "/cosmos.crypto.ed25519.PubKey",
+        "value": "mkCun/o5hNRAv2AROuOdl3xP9KhQr9GMXol6Fk7wZQ4="
+      },
+      "status": "BOND_STATUS_BONDED",
+      "tokens": "200232886078924580000000000",
+      "delegator_shares": "200232886078924580000000000.000000000000000000",
+      "description": {
+        "moniker": "Integra-Helsinki"
+      },
+      "unbonding_time": "1970-01-01T00:00:00Z",
+      "commission": {
+        "commission_rates": {
+          "rate": "0.050000000000000000",
+          "max_rate": "0.200000000000000000",
+          "max_change_rate": "0.010000000000000000"
+        },
+        "update_time": "2026-02-26T20:09:39.217727835Z"
+      },
+      "min_self_delegation": "1"
+    },
+    {
+      "operator_address": "integravaloper15uyrkdtw2rlpfm2wfq4rmrcycgl2e5k5hy94sf",
+      "consensus_pubkey": {
+        "type": "/cosmos.crypto.ed25519.PubKey",
+        "value": "5jqLNxjetjzendP2DDeIe42uislDBNXrVaYAsUM5eQc="
+      },
+      "status": "BOND_STATUS_BONDED",
+      "tokens": "200222019787270000000000000",
+      "delegator_shares": "200222019787270000000000000.000000000000000000",
+      "description": {
+        "moniker": "Integra-Amsterdam"
+      },
+      "unbonding_time": "1970-01-01T00:00:00Z",
+      "commission": {
+        "commission_rates": {
+          "rate": "0.050000000000000000",
+          "max_rate": "0.200000000000000000",
+          "max_change_rate": "0.010000000000000000"
+        },
+        "update_time": "2026-02-26T20:09:39.217727835Z"
+      },
+      "min_self_delegation": "1"
+    }
+  ],
+  "pagination": {
+    "total": "4"
+  }
+}
+
+===== 6. CONSENSUS STATE =====
+--- /consensus_state head 200 ---
+{"jsonrpc":"2.0","id":-1,"result":{"round_state":{"height/round/step":"1171364/0/1","start_time":"2026-05-13T12:28:53.461780914Z","proposal_block_hash":"","locked_block_hash":"","valid_block_hash":"","height_vote_set":[{"round":0,"prevotes":["nil-Vote","nil-Vote","nil-Vote"],"prevotes_bit_array":"BA{3:___} 0/600816387 = 0.00","precommits":["nil-Vote","nil-Vote","nil-Vote"],"precommits_bit_array":"BA{3:___} 0/600816387 = 0.00"}],"proposer":{"address":"6179E85226B0D749FFEA5EB08637AEADA467C2BA","index":0}}}}
+--- /dump_consensus_state head 150 ---
+{"jsonrpc":"2.0","id":-1,"result":{"round_state":{"height":"1171364","round":0,"step":3,"start_time":"2026-05-13T12:28:53.461780914Z","commit_time":"2026-05-13T12:28:48.461780914Z","validators":{"validators":[{"address":"6179E85226B0D749FFEA5EB08637AEADA467C2BA","pub_key":{"type":"tendermint/PubKeyEd25519","value":"1mc2+OQsKhk5h8Paf/5BoCElLXz7vsWMRWCfY5/4WgI="},"voting_power":"200361482","proposer_priority":"-159199116"},{"address":"E52BA176B57A836EA710381C1C95B7DBDEF6B2C1","pub_key":{"type":"tendermint/PubKeyEd25519","value":"mkCun/o5hNRAv2AROuOdl3xP9KhQr9GMXol6Fk7wZQ4="},"voting_power":"200232886","proposer_priority":"256686439"},{"address":"8BA85F96AB547BF96B5B0AE220BD7ED477DAC9BA","pub_key":{"type":"tendermint/PubKeyEd25519","value":"5jqLNxjetjzendP2DDeIe42uislDBNXrVaYAsUM5eQc="},"voting_power":"200222019","proposer_priority":"-97487321"}],"proposer":{"address":"6179E85226B0D749FFEA5EB08637AEADA467C2BA","pub_key":{"type":"tendermint/PubKeyEd25519","value":"1mc2+OQsKhk5h8Paf/5BoCElLXz7vsWMRWCfY5/4WgI="},"voting_power":"200361482","proposer_priority":"-159199116"}},"proposal":null,"proposal_block":null,"proposal_block_parts":null,"locked_round":-1,"locked_block":null,"locked_block_parts":null,"valid_round":-1,"valid_block":null,"valid_block_parts":null,"votes":[{"round":0,"prevotes":["nil-Vote","nil-Vote","nil-Vote"],"prevotes_bit_array":"BA{3:___} 0/600816387 = 0.00","precommits":["nil-Vote","nil-Vote","nil-Vote"],"precommits_bit_array":"BA{3:___} 0/600816387 = 0.00"},{"round":1,"prevotes":["nil-Vote","nil-Vote","nil-Vote"],"prevotes_bit_array":"BA{3:___} 0/600816387 = 0.00","precommits":["nil-Vote","nil-Vote","nil-Vote"],"precommits_bit_array":"BA{3:___} 0/600816387 = 0.00"}],"commit_round":-1,"last_commit":{"votes":["Vote{0:6179E85226B0 1171363/00/SIGNED_MSG_TYPE_PRECOMMIT(Precommit) BAEA52C87549 268F21F6771F 000000000000 @ 2026-05-13T12:20:43.264254408Z}","Vote{1:E52BA176B57A 1171363/00/SIGNED_MSG_TYPE_PRECOMMIT(Precommit) 000000000000 328E3EF72947 000000000000 @ 2026-05-13T12:28:48.459367808Z}","Vote{2:8BA85F96AB54 1171363/00/SIGNED_MSG_TYPE_PRECOMMIT(Precommit) BAEA52C87549 266EFA54A5CC 000000000000 @ 2026-05-13T12:20:43.411586512Z}"],"votes_bit_array":"BA{3:xxx} 600816387/600816387 = 1.00","peer_maj_23s":{}},"last_validators":{"validators":[{"address":"6179E85226B0D749FFEA5EB08637AEADA467C2BA","pub_key":{"type":"tendermint/PubKeyEd25519","value":"1mc2+OQsKhk5h8Paf/5BoCElLXz7vsWMRWCfY5/4WgI="},"voting_power":"200361482","proposer_priority":"241255789"},{"address":"E52BA176B57A836EA710381C1C95B7DBDEF6B2C1","pub_key":{"type":"tendermint/PubKeyEd25519","value":"mkCun/o5hNRAv2AROuOdl3xP9KhQr9GMXol6Fk7wZQ4="},"voting_power":"200232886","proposer_priority":"56453553"},{"address":"8BA85F96AB547BF96B5B0AE220BD7ED477DAC9BA","pub_key":{"type":"tendermint/PubKeyEd25519","value":"5jqLNxjetjzendP2DDeIe42uislDBNXrVaYAsUM5eQc="},"voting_power":"200222019","proposer_priority":"-297709340"}],"proposer":{"address":"8BA85F96AB547BF96B5B0AE220BD7ED477DAC9BA","pub_key":{"type":"tendermint/PubKeyEd25519","value":"5jqLNxjetjzendP2DDeIe42uislDBNXrVaYAsUM5eQc="},"voting_power":"200222019","proposer_priority":"-297709340"}},"triggered_timeout_precommit":false},"peers":[{"node_address":"bee94426ebd65dd3ee7ab56b8fcebf7f1b1585e7@159.223.206.94:26656","peer_state":{"round_state":{"height":"1171433","round":0,"step":3,"start_time":"2026-05-13T12:29:05.857994896Z","proposal":false,"proposal_block_part_set_header":{"total":0,"hash":""},"proposal_block_parts":null,"proposal_pol_round":-1,"proposal_pol":null,"prevotes":null,"precommits":null,"last_commit_round":0,"last_commit":null,"catchup_commit_round":-1,"catchup_commit":null},"stats":{"votes":"130","block_parts":"232"}}},{"node_address":"1d215b882540caf56adf5d4279f377b57dfecac5@45.77.139.208:56884","peer_state":{"round_state":{"height":"1171433","round":0,"step":3,"start_time":"2026-05-13T12:29:05.857171615Z","proposal":false,"proposal_block_part_set_header":{"total":0,"hash":""},"proposal_block_parts":null,"proposal_pol_round":-1,"proposal_pol":null,"prevotes":null,"precommits":null,"last_commit_round":0,"last_commit":null,"catchup_commit_round":-1,"catchup_commit":null},"stats":{"votes":"485","block_parts":"156"}}}]}}
+===== 7. DB SHAPE =====
+--- du -sh of data subdirs ---
+33G	/root/.intgd/data
+18G	/root/.intgd/data/application.db
+2.1G	/root/.intgd/data/blockstore.db
+2.3G	/root/.intgd/data/state.db
+8.8G	/root/.intgd/data/tx_index.db
+1019M	/root/.intgd/data/cs.wal
+32K	/root/.intgd/data/evidence.db
+
+--- application.db top-level ls ---
+total 18G
+-rw-r--r-- 1 root root  2.1M Feb 27 18:22 001070.ldb
+-rw-r--r-- 1 root root  2.1M Feb 28 00:31 001748.ldb
+-rw-r--r-- 1 root root  2.1M Feb 28 07:02 002707.ldb
+-rw-r--r-- 1 root root  2.1M Feb 28 13:34 003678.ldb
+-rw-r--r-- 1 root root  2.1M Feb 28 19:40 004609.ldb
+-rw-r--r-- 1 root root  2.1M Mar  1 02:12 005603.ldb
+-rw-r--r-- 1 root root  2.1M Mar  1 08:43 006557.ldb
+-rw-r--r-- 1 root root  2.1M Mar  1 14:51 007492.ldb
+-rw-r--r-- 1 root root  2.1M Mar  1 21:23 008495.ldb
+
+--- SST file count (under data/) ---
+0
+--- WAL/MANIFEST files (top of application.db) ---
+/root/.intgd/data/application.db/1086176.log
+/root/.intgd/data/application.db/MANIFEST-1046488
+/root/.intgd/data/application.db/CURRENT
+
+===== 8. APP.TOML / CONFIG.TOML KEY VALUES =====
+--- app.toml [json-rpc][api][mempool][pruning] sections ---
+[api]
+
+# Enable defines if the API server should be enabled.
+enable = true
+
+# Swagger defines if swagger documentation should automatically be registered.
+swagger = false
+
+# Address defines the API server to listen on.
+address = "tcp://localhost:1317"
+
+# MaxOpenConnections defines the number of maximum open connections.
+max-open-connections = 1000
+
+# RPCReadTimeout defines the CometBFT RPC read timeout (in seconds).
+rpc-read-timeout = 10
+
+# RPCWriteTimeout defines the CometBFT RPC write timeout (in seconds).
+rpc-write-timeout = 0
+
+# RPCMaxBodyBytes defines the CometBFT maximum request body (in bytes).
+rpc-max-body-bytes = 1000000
+
+# EnableUnsafeCORS defines if CORS should be enabled (unsafe - use it at your own risk).
+enabled-unsafe-cors = false
+
+###############################################################################
+###                           gRPC Configuration                            ###
+###############################################################################
+
+[state-sync]
+
+# snapshot-interval specifies the block interval at which local state sync snapshots are
+# taken (0 to disable).
+snapshot-interval = 1000
+
+# snapshot-keep-recent specifies the number of recent snapshots to keep and serve (0 to keep all).
+snapshot-keep-recent = 2
+
+###############################################################################
+###                              State Streaming                            ###
+###############################################################################
+
+# Streaming allows nodes to stream state to external systems.
+[json-rpc]
+
+# Enable defines if the JSONRPC server should be enabled.
+enable = true
+
+# Address defines the EVM RPC HTTP server address to bind to.
+address = "0.0.0.0:8545"
+
+# Address defines the EVM WebSocket server address to bind to.
+ws-address = "0.0.0.0:8546"
+
+# WSOrigins defines the allowed origins for WebSocket connections.
+# Example: ["localhost", "127.0.0.1", "myapp.example.com"]
+ws-origins = ["127.0.0.1", "localhost"]
+
+# API defines a list of JSON-RPC namespaces that should be enabled
+# Example: "eth,txpool,personal,net,debug,web3"
+api = "eth,net,web3"
+
+# GasCap sets a cap on gas that can be used in eth_call/estimateGas (0=infinite). Default: 25,000,000.
+gas-cap = 300000000
+
+# Allow insecure account unlocking when account-related RPCs are exposed by http
+allow-insecure-unlock = true
+
+# EVMTimeout is the global timeout for eth_call. Default: 5s.
+evm-timeout = "15s"
+
+# TxFeeCap is the global tx-fee cap for send transaction. Default: 1eth.
+txfee-cap = 1
+
+# FilterCap sets the global cap for total number of filters that can be created
+filter-cap = 200
+
+# FeeHistoryCap sets the global cap for total number of blocks that can be fetched
+feehistory-cap = 100
+
+# LogsCap defines the max number of results can be returned from single 'eth_getLogs' query.
+logs-cap = 10000
+
+# BlockRangeCap defines the max block range allowed for 'eth_getLogs' query.
+block-range-cap = 10000
+
+# HTTPTimeout is the read/write timeout of http json-rpc server.
+http-timeout = "30s"
+
+# HTTPIdleTimeout is the idle timeout of http json-rpc server.
+http-idle-timeout = "2m0s"
+
+# AllowUnprotectedTxs restricts unprotected (non EIP155 signed) transactions to be submitted via
+# the node's RPC when the global parameter is disabled.
+allow-unprotected-txs = false
+
+# MaxOpenConnections sets the maximum number of simultaneous connections
+# for the server listener.
+max-open-connections = 0
+
+# EnableIndexer enables the custom transaction indexer for the EVM (ethereum transactions).
+enable-indexer = true
+
+# MetricsAddress defines the EVM Metrics server address to bind to. Pass --metrics in CLI to enable
+# Prometheus metrics path: /debug/metrics/prometheus
+metrics-address = "127.0.0.1:6065"
+
+# Maximum number of requests in a batch.
+batch-request-limit = 1000
+
+# Maximum number of bytes returned from a batched call.
+batch-response-max-size = 25000000
+
+# Enabled profiling in the debug namespace
+enable-profiling = false
+
+###############################################################################
+###                             TLS Configuration                           ###
+###############################################################################
+--- top-level pruning / snapshot keys (app.toml) ---
+pruning = "default"
+pruning-keep-recent = "0"
+pruning-interval = "0"
+halt-height = 0
+halt-time = 0
+min-retain-blocks = 0
+inter-block-cache = true
+index-events = []
+iavl-cache-size = 781250
+iavl-disable-fastnode = false
+snapshot-interval = 1000
+snapshot-keep-recent = 2
+
+--- config.toml [mempool][consensus][tx_index][p2p] ---
+[rpc]
+
+# TCP or UNIX socket address for the RPC server to listen on
+laddr = "tcp://127.0.0.1:26657"
+
+# A list of origins a cross-domain request can be executed from
+# Default value '[]' disables cors support
+# Use '["*"]' to allow any origin
+cors_allowed_origins = []
+
+# A list of methods the client is allowed to use with cross-domain requests
+cors_allowed_methods = ["HEAD", "GET", "POST", ]
+
+# A list of non simple headers the client is allowed to use with cross-domain requests
+cors_allowed_headers = ["Origin", "Accept", "Content-Type", "X-Requested-With", "X-Server-Time", ]
+
+# TCP or UNIX socket address for the gRPC server to listen on
+# NOTE: This server only supports /broadcast_tx_commit
+grpc_laddr = ""
+
+# Maximum number of simultaneous connections.
+# Does not include RPC (HTTP&WebSocket) connections. See max_open_connections
+# If you want to accept a larger number than the default, make sure
+# you increase your OS limits.
+# 0 - unlimited.
+# Should be < {ulimit -Sn} - {MaxNumInboundPeers} - {MaxNumOutboundPeers} - {N of wal, db and other open files}
+# 1024 - 40 - 10 - 50 = 924 = ~900
+grpc_max_open_connections = 900
+
+# Activate unsafe RPC commands like /dial_seeds and /unsafe_flush_mempool
+unsafe = false
+
+# Maximum number of simultaneous connections (including WebSocket).
+# Does not include gRPC connections. See grpc_max_open_connections
+# If you want to accept a larger number than the default, make sure
+# you increase your OS limits.
+# 0 - unlimited.
+# Should be < {ulimit -Sn} - {MaxNumInboundPeers} - {MaxNumOutboundPeers} - {N of wal, db and other open files}
+# 1024 - 40 - 10 - 50 = 924 = ~900
+max_open_connections = 900
+
+# Maximum number of unique clientIDs that can /subscribe
+# If you're using /broadcast_tx_commit, set to the estimated maximum number
+# of broadcast_tx_commit calls per block.
+max_subscription_clients = 100
+
+# Maximum number of unique queries a given client can /subscribe to
+# If you're using GRPC (or Local RPC client) and /broadcast_tx_commit, set to
+# the estimated # maximum number of broadcast_tx_commit calls per block.
+max_subscriptions_per_client = 5
+
+# Experimental parameter to specify the maximum number of events a node will
+# buffer, per subscription, before returning an error and closing the
+# subscription. Must be set to at least 100, but higher values will accommodate
+# higher event throughput rates (and will use more memory).
+experimental_subscription_buffer_size = 200
+
+# Experimental parameter to specify the maximum number of RPC responses that
+# can be buffered per WebSocket client. If clients cannot read from the
+# WebSocket endpoint fast enough, they will be disconnected, so increasing this
+# parameter may reduce the chances of them being disconnected (but will cause
+# the node to use more memory).
+#
+# Must be at least the same as "experimental_subscription_buffer_size",
+# otherwise connections could be dropped unnecessarily. This value should
+# ideally be somewhat higher than "experimental_subscription_buffer_size" to
+# accommodate non-subscription-related RPC responses.
+experimental_websocket_write_buffer_size = 200
+
+# If a WebSocket client cannot read fast enough, at present we may
+# silently drop events instead of generating an error or disconnecting the
+# client.
+#
+# Enabling this experimental parameter will cause the WebSocket connection to
+# be closed instead if it cannot read fast enough, allowing for greater
+# predictability in subscription behavior.
+experimental_close_on_slow_client = false
+
+# How long to wait for a tx to be committed during /broadcast_tx_commit.
+# WARNING: Using a value larger than 10s will result in increasing the
+# global HTTP write timeout, which applies to all connections and endpoints.
+# See https://github.com/tendermint/tendermint/issues/3435
+timeout_broadcast_tx_commit = "10s"
+
+# Maximum number of requests that can be sent in a batch
+# If the value is set to '0' (zero-value), then no maximum batch size will be
+# enforced for a JSON-RPC batch request.
+max_request_batch_size = 10
+
+# Maximum size of request body, in bytes
+max_body_bytes = 1000000
+
+# Maximum size of request header, in bytes
+max_header_bytes = 1048576
+
+# The path to a file containing certificate that is used to create the HTTPS server.
+# Might be either absolute path or path related to CometBFT's config directory.
+# If the certificate is signed by a certificate authority,
+# the certFile should be the concatenation of the server's certificate, any intermediates,
+# and the CA's certificate.
+# NOTE: both tls_cert_file and tls_key_file must be present for CometBFT to create HTTPS server.
+# Otherwise, HTTP server is run.
+tls_cert_file = ""
+
+# The path to a file containing matching private key that is used to create the HTTPS server.
+# Might be either absolute path or path related to CometBFT's config directory.
+# NOTE: both tls-cert-file and tls-key-file must be present for CometBFT to create HTTPS server.
+# Otherwise, HTTP server is run.
+tls_key_file = ""
+
+# pprof listen address (https://golang.org/pkg/net/http/pprof)
+pprof_laddr = "localhost:6060"
+
+#######################################################
+###           P2P Configuration Options             ###
+#######################################################
+[p2p]
+
+# Address to listen for incoming connections
+laddr = "tcp://0.0.0.0:26656"
+
+# Address to advertise to peers for them to dial. If empty, will use the same
+# port as the laddr, and will introspect on the listener to figure out the
+# address. IP and port are required. Example: 159.89.10.97:26656
+external_address = "46.225.231.81:26656"
+
+# Comma separated list of seed nodes to connect to
+seeds = ""
+
+# Comma separated list of nodes to keep persistent connections to
+persistent_peers = "10d16647b0476d5405ceeb20347437a70da0c0b1@46.225.231.81:26656,1d215b882540caf56adf5d4279f377b57dfecac5@45.77.139.208:26656,bee94426ebd65dd3ee7ab56b8fcebf7f1b1585e7@159.223.206.94:26656"
+
+# Path to address book
+addr_book_file = "config/addrbook.json"
+
+# Set true for strict address routability rules
+# Set false for private or local networks
+addr_book_strict = true
+
+# Maximum number of inbound peers
+max_num_inbound_peers = 40
+
+# Maximum number of outbound peers to connect to, excluding persistent peers
+max_num_outbound_peers = 10
+
+# List of node IDs, to which a connection will be (re)established ignoring any existing limits
+unconditional_peer_ids = ""
+
+# Maximum pause when redialing a persistent peer (if zero, exponential backoff is used)
+persistent_peers_max_dial_period = "0s"
+
+# Time to wait before flushing messages out on the connection
+flush_throttle_timeout = "100ms"
+
+# Maximum size of a message packet payload, in bytes
+max_packet_msg_payload_size = 1024
+
+# Rate at which packets can be sent, in bytes/second
+send_rate = 5120000
+
+# Rate at which packets can be received, in bytes/second
+recv_rate = 5120000
+
+# Set true to enable the peer-exchange reactor
+pex = true
+
+# Seed mode, in which node constantly crawls the network and looks for
+# peers. If another node asks it for addresses, it responds and disconnects.
+#
+# Does not work if the peer-exchange reactor is disabled.
+seed_mode = false
+
+# Comma separated list of peer IDs to keep private (will not be gossiped to other peers)
+private_peer_ids = ""
+
+# Toggle to disable guard against peers connecting from the same ip.
+allow_duplicate_ip = false
+
+# Peer connection configuration.
+handshake_timeout = "20s"
+
+--- key knobs grep ---
+/root/.intgd/config/app.toml:# default: the last 362880 states are kept, pruning at 10 block intervals
+/root/.intgd/config/app.toml:# everything: 2 latest states will be kept; pruning at 10 block intervals.
+/root/.intgd/config/app.toml:# custom: allow pruning options to be manually specified through 'pruning-keep-recent', and 'pruning-interval'
+/root/.intgd/config/app.toml:pruning = "default"
+/root/.intgd/config/app.toml:# These are applied if and only if the pruning strategy is custom.
+/root/.intgd/config/app.toml:pruning-keep-recent = "0"
+/root/.intgd/config/app.toml:pruning-interval = "0"
+/root/.intgd/config/app.toml:# This configuration value is only responsible for pruning CometBFT blocks.
+/root/.intgd/config/app.toml:# It has no bearing on application state pruning which is determined by the
+/root/.intgd/config/app.toml:# "pruning-*" configurations.
+/root/.intgd/config/app.toml:# Note: CometBFT block pruning is dependant on this parameter in conjunction
+/root/.intgd/config/app.toml:# with the unbonding (safety threshold) period, state pruning and state sync
+/root/.intgd/config/app.toml:iavl-cache-size = 781250
+/root/.intgd/config/app.toml:max-recv-msg-size = "10485760"
+/root/.intgd/config/app.toml:max-send-msg-size = "2147483647"
+/root/.intgd/config/app.toml:# snapshot-interval specifies the block interval at which local state sync snapshots are
+/root/.intgd/config/app.toml:snapshot-interval = 1000
+/root/.intgd/config/app.toml:# snapshot-keep-recent specifies the number of recent snapshots to keep and serve (0 to keep all).
+/root/.intgd/config/app.toml:snapshot-keep-recent = 2
+/root/.intgd/config/app.toml:gas-cap = 300000000
+/root/.intgd/config/app.toml:evm-timeout = "15s"
+/root/.intgd/config/app.toml:batch-response-max-size = 25000000
+/root/.intgd/config/config.toml:experimental_subscription_buffer_size = 200
+/root/.intgd/config/config.toml:experimental_websocket_write_buffer_size = 200
+/root/.intgd/config/config.toml:max_request_batch_size = 10
+/root/.intgd/config/config.toml:# pprof listen address (https://golang.org/pkg/net/http/pprof)
+/root/.intgd/config/config.toml:pprof_laddr = "localhost:6060"
+/root/.intgd/config/config.toml:max_packet_msg_payload_size = 1024
+/root/.intgd/config/config.toml:# Recheck (default: true) defines whether CometBFT should recheck the
+/root/.intgd/config/config.toml:# you can disable rechecking.
+/root/.intgd/config/config.toml:recheck = true
+/root/.intgd/config/config.toml:# recheck_timeout is the time the application has during the rechecking process
+/root/.intgd/config/config.toml:# non-local ABCI clients and when recheck is enabled.
+/root/.intgd/config/config.toml:# so that the recheck duration is not affected by network delays when making requests and receiving responses.
+/root/.intgd/config/config.toml:recheck_timeout = "1s"
+/root/.intgd/config/config.toml:size = 5000
+/root/.intgd/config/config.toml:# max_txs_bytes=5MB, mempool will only accept 5 transactions).
+/root/.intgd/config/config.toml:max_txs_bytes = 1073741824
+/root/.intgd/config/config.toml:cache_size = 10000
+
+===== 9. PPROF PROBE =====
+pprof_http_root=200
+goroutine profile: total 34137
+16756 @ 0x479ace 0x456125 0x4560f4 0x47b3c5 0x49f628 0xcbc82a 0xcc437d 0xcc14d2 0xc64889 0x1abad22 0x27dca64 0xc64889 0xc84e6e 0xc63230 0x4822a1
+#	0x47b3c4	sync.runtime_Semacquire+0x24						/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/runtime/sema.go:71
+#	0x49f627	sync.(*WaitGroup).Wait+0x47						/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/sync/waitgroup.go:118
+#	0xcbc829	github.com/ethereum/go-ethereum/rpc.(*handler).close+0x309		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:318
+#	0xcc437c	github.com/ethereum/go-ethereum/rpc.(*Server).serveSingleRequest+0x15c	/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/server.go:167
+#	0xcc14d1	github.com/ethereum/go-ethereum/rpc.(*Server).ServeHTTP+0x351		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/http.go:335
+#	0xc64888	net/http.HandlerFunc.ServeHTTP+0x28					/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/net/http/server.go:2220
+#	0x1abad21	github.com/gorilla/mux.(*Router).ServeHTTP+0x1e1			/root/go/pkg/mod/github.com/gorilla/mux@v1.8.1/mux.go:212
+#	0x27dca63	github.com/cosmos/evm/server.StartJSONRPC.(*Cors).Handler.func2+0x183	/root/go/pkg/mod/github.com/rs/cors@v1.11.1/cors.go:289
+#	0xc64888	net/http.HandlerFunc.ServeHTTP+0x28					/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/net/http/server.go:2220
+#	0xc84e6d	net/http.serverHandler.ServeHTTP+0x8d					/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/net/http/server.go:3210
+#	0xc6322f	net/http.(*conn).serve+0x5cf						/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/net/http/server.go:2092
+
+10800 @ 0x479ace 0x456125 0x4560f4 0x47b485 0x49de7d 0xb015be 0xb015a3 0xb0027b 0xb06c05 0xb06ba6 0xb07452 0xb08113 0xb32b8c 0xb32b46 0xb3536b 0xb34952 0xb34f45 0xb12f8f 0xb13879 0x183b3c6 0x1e3f013 0x1ee73a7 0x1f84225 0x27ad028 0x27cc363 0x27ca4f2 0x4b7286 0x4b6399 0xcc5e05 0xcbeb7c 0xcbe2a5 0xcbdaed 0xcbc1ea 0xcbc045 0xcbcdfb 0x4822a1
+#	0x47b484	sync.runtime_SemacquireMutex+0x24								/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/runtime/sema.go:95
+#	0x49de7c	sync.(*Mutex).lockSlow+0x15c									/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/sync/mutex.go:173
+#	0xb015bd	sync.(*Mutex).Lock+0x3d										/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/sync/mutex.go:92
+#	0xb015a2	github.com/syndtr/goleveldb/leveldb/cache.(*lru).Promote+0x22					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/cache/lru.go:85
+#	0xb0027a	github.com/syndtr/goleveldb/leveldb/cache.(*Cache).Get+0x27a					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/cache/cache.go:399
+#	0xb06c04	github.com/syndtr/goleveldb/leveldb/cache.(*NamespaceGetter).Get+0xa4				/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/cache/cache.go:58
+#	0xb06ba5	github.com/syndtr/goleveldb/leveldb/table.(*Reader).readBlockCached+0x45			/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table/reader.go:625
+#	0xb07451	github.com/syndtr/goleveldb/leveldb/table.(*Reader).getIndexBlock+0x51				/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table/reader.go:712
+#	0xb08112	github.com/syndtr/goleveldb/leveldb/table.(*Reader).find+0x112					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table/reader.go:829
+#	0xb32b8b	github.com/syndtr/goleveldb/leveldb/table.(*Reader).Find+0x10b					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table/reader.go:922
+#	0xb32b45	github.com/syndtr/goleveldb/leveldb.(*tOps).find+0xc5						/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table.go:450
+#	0xb3536a	github.com/syndtr/goleveldb/leveldb.(*version).get.func1+0x20a					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/version.go:180
+#	0xb34951	github.com/syndtr/goleveldb/leveldb.(*version).walkOverlapping+0x251				/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/version.go:128
+#	0xb34f44	github.com/syndtr/goleveldb/leveldb.(*version).get+0x2e4					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/version.go:164
+#	0xb12f8e	github.com/syndtr/goleveldb/leveldb.(*DB).get+0x54e						/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/db.go:785
+#	0xb13878	github.com/syndtr/goleveldb/leveldb.(*DB).Get+0x138						/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/db.go:851
+#	0x183b3c5	github.com/cometbft/cometbft-db.(*GoLevelDB).Get+0x25						/root/go/pkg/mod/github.com/cometbft/cometbft-db@v0.14.1/goleveldb.go:48
+#	0x1e3f012	github.com/cometbft/cometbft/state.dbStore.LoadFinalizeBlockResponse+0xb2			/root/go/pkg/mod/github.com/cometbft/cometbft@v0.38.19/state/store.go:423
+#	0x1ee73a6	github.com/cometbft/cometbft/rpc/core.(*Environment).BlockResults+0x66				/root/go/pkg/mod/github.com/cometbft/cometbft@v0.38.19/rpc/core/blocks.go:190
+#	0x1f84224	github.com/cometbft/cometbft/rpc/client/local.(*Local).BlockResults+0x24			/root/go/pkg/mod/github.com/cometbft/cometbft@v0.38.19/rpc/client/local/local.go:168
+#	0x27ad027	github.com/cosmos/evm/rpc/backend.(*Backend).CometBlockResultByNumber+0x47			/opt/integra-chain/rpc/backend/comet.go:52
+#	0x27cc362	github.com/cosmos/evm/rpc/namespaces/ethereum/eth/filters.(*Filter).Logs+0x7c2			/opt/integra-chain/rpc/namespaces/ethereum/eth/filters/filters.go:180
+#	0x27ca4f1	github.com/cosmos/evm/rpc/namespaces/ethereum/eth/filters.(*PublicFilterAPI).GetLogs+0x2d1	/opt/integra-chain/rpc/namespaces/ethereum/eth/filters/api.go:249
+#	0x4b7285	reflect.Value.call+0xca5									/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/reflect/value.go:584
+#	0x4b6398	reflect.Value.Call+0xb8										/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/reflect/value.go:368
+#	0xcc5e04	github.com/ethereum/go-ethereum/rpc.(*callback).call+0x364					/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/service.go:205
+#	0xcbeb7b	github.com/ethereum/go-ethereum/rpc.(*handler).runMethod+0x3b					/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:577
+#	0xcbe2a4	github.com/ethereum/go-ethereum/rpc.(*handler).handleCall+0x364					/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:519
+#	0xcbdaec	github.com/ethereum/go-ethereum/rpc.(*handler).handleCallMsg+0x22c				/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:473
+#	0xcbc1e9	github.com/ethereum/go-ethereum/rpc.(*handler).handleNonBatchCall+0x189				/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:299
+#	0xcbc044	github.com/ethereum/go-ethereum/rpc.(*handler).handleMsg.func1.1+0x24				/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:272
+#	0xcbcdfa	github.com/ethereum/go-ethereum/rpc.(*handler).startCallProc.func1+0xba				/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:390
+
+5488 @ 0x479ace 0x456125 0x4560f4 0x47b485 0x49de7d 0xb015be 0xb015a3 0xb0027b 0xb06c05 0xb06ba6 0xb078e6 0xb08678 0xb32b8c 0xb32b46 0xb3536b 0xb34952 0xb34f45 0xb12f8f 0xb13879 0x183b3c6 0x1e3f013 0x1ee73a7 0x1f84225 0x27ad028 0x27cc363 0x27ca4f2 0x4b7286 0x4b6399 0xcc5e05 0xcbeb7c 0xcbe2a5 0xcbdaed 0xcbc1ea 0xcbc045 0xcbcdfb 0x4822a1
+#	0x47b484	sync.runtime_SemacquireMutex+0x24								/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/runtime/sema.go:95
+#	0x49de7c	sync.(*Mutex).lockSlow+0x15c									/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/sync/mutex.go:173
+#	0xb015bd	sync.(*Mutex).Lock+0x3d										/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/sync/mutex.go:92
+#	0xb015a2	github.com/syndtr/goleveldb/leveldb/cache.(*lru).Promote+0x22					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/cache/lru.go:85
+#	0xb0027a	github.com/syndtr/goleveldb/leveldb/cache.(*Cache).Get+0x27a					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/cache/cache.go:399
+#	0xb06c04	github.com/syndtr/goleveldb/leveldb/cache.(*NamespaceGetter).Get+0xa4				/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/cache/cache.go:58
+#	0xb06ba5	github.com/syndtr/goleveldb/leveldb/table.(*Reader).readBlockCached+0x45			/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table/reader.go:625
+#	0xb078e5	github.com/syndtr/goleveldb/leveldb/table.(*Reader).getDataIter+0x25				/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table/reader.go:765
+#	0xb08677	github.com/syndtr/goleveldb/leveldb/table.(*Reader).find+0x677					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table/reader.go:865
+#	0xb32b8b	github.com/syndtr/goleveldb/leveldb/table.(*Reader).Find+0x10b					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table/reader.go:922
+#	0xb32b45	github.com/syndtr/goleveldb/leveldb.(*tOps).find+0xc5						/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table.go:450
+#	0xb3536a	github.com/syndtr/goleveldb/leveldb.(*version).get.func1+0x20a					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/version.go:180
+#	0xb34951	github.com/syndtr/goleveldb/leveldb.(*version).walkOverlapping+0x251				/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/version.go:128
+#	0xb34f44	github.com/syndtr/goleveldb/leveldb.(*version).get+0x2e4					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/version.go:164
+#	0xb12f8e	github.com/syndtr/goleveldb/leveldb.(*DB).get+0x54e						/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/db.go:785
+#	0xb13878	github.com/syndtr/goleveldb/leveldb.(*DB).Get+0x138						/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/db.go:851
+#	0x183b3c5	github.com/cometbft/cometbft-db.(*GoLevelDB).Get+0x25						/root/go/pkg/mod/github.com/cometbft/cometbft-db@v0.14.1/goleveldb.go:48
+#	0x1e3f012	github.com/cometbft/cometbft/state.dbStore.LoadFinalizeBlockResponse+0xb2			/root/go/pkg/mod/github.com/cometbft/cometbft@v0.38.19/state/store.go:423
+#	0x1ee73a6	github.com/cometbft/cometbft/rpc/core.(*Environment).BlockResults+0x66				/root/go/pkg/mod/github.com/cometbft/cometbft@v0.38.19/rpc/core/blocks.go:190
+#	0x1f84224	github.com/cometbft/cometbft/rpc/client/local.(*Local).BlockResults+0x24			/root/go/pkg/mod/github.com/cometbft/cometbft@v0.38.19/rpc/client/local/local.go:168
+#	0x27ad027	github.com/cosmos/evm/rpc/backend.(*Backend).CometBlockResultByNumber+0x47			/opt/integra-chain/rpc/backend/comet.go:52
+#	0x27cc362	github.com/cosmos/evm/rpc/namespaces/ethereum/eth/filters.(*Filter).Logs+0x7c2			/opt/integra-chain/rpc/namespaces/ethereum/eth/filters/filters.go:180
+#	0x27ca4f1	github.com/cosmos/evm/rpc/namespaces/ethereum/eth/filters.(*PublicFilterAPI).GetLogs+0x2d1	/opt/integra-chain/rpc/namespaces/ethereum/eth/filters/api.go:249
+#	0x4b7285	reflect.Value.call+0xca5									/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/reflect/value.go:584
+#	0x4b6398	reflect.Value.Call+0xb8										/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/reflect/value.go:368
+#	0xcc5e04	github.com/ethereum/go-ethereum/rpc.(*callback).call+0x364					/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/service.go:205
+#	0xcbeb7b	github.com/ethereum/go-ethereum/rpc.(*handler).runMethod+0x3b					/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:577
+#	0xcbe2a4	github.com/ethereum/go-ethereum/rpc.(*handler).handleCall+0x364					/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:519
+#	0xcbdaec	github.com/ethereum/go-ethereum/rpc.(*handler).handleCallMsg+0x22c				/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:473
+#	0xcbc1e9	github.com/ethereum/go-ethereum/rpc.(*handler).handleNonBatchCall+0x189				/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:299
+#	0xcbc044	github.com/ethereum/go-ethereum/rpc.(*handler).handleMsg.func1.1+0x24				/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:272
+#	0xcbcdfa	github.com/ethereum/go-ethereum/rpc.(*handler).startCallProc.func1+0xba				/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:390
+
+419 @ 0x479ace 0x43b617 0x478dc5 0x501827 0x502b1a 0x502b08 0xa02ca5 0xa13985 0xc5dbb7 0x4822a1
+#	0x478dc4	internal/poll.runtime_pollWait+0x84		/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/runtime/netpoll.go:351
+#	0x501826	internal/poll.(*pollDesc).wait+0x26		/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/internal/poll/fd_poll_runtime.go:84
+#	0x502b19	internal/poll.(*pollDesc).waitRead+0x279	/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/internal/poll/fd_poll_runtime.go:89
+#	0x502b07	internal/poll.(*FD).Read+0x267			/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/internal/poll/fd_unix.go:165
+#	0xa02ca4	net.(*netFD).Read+0x24				/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/net/fd_posix.go:55
+#	0xa13984	net.(*conn).Read+0x44				/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/net/net.go:189
+#	0xc5dbb6	net/http.(*connReader).backgroundRead+0x36	/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/net/http/server.go:690
+
+118 @ 0x479ace 0x455085 0xf9ebc8 0x100eefa 0x100eee7 0x100e1bf 0x100ca9a 0x100dfb5 0xfeb20b 0xfeb0bf 0x1a65945 0x2213628 0x27a5c92 0x27ad69e 0x27acf79 0x27a9c95 0x27c73ef 0x4b7286 0x4b6399 0xcc5e05 0xcbeb7c 0xcbe2a5 0xcbdaed 0xcbc1ea 0xcbc045 0xcbcdfb 0x4822a1
+#	0xf9ebc7	google.golang.org/grpc/internal/transport.(*ClientStream).waitOnHeader+0x67	/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/internal/transport/client_stream.go:92
+#	0x100eef9	google.golang.org/grpc/internal/transport.(*ClientStream).RecvCompress+0x119	/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/internal/transport/client_stream.go:107
+#	0x100eee6	google.golang.org/grpc.(*csAttempt).recvMsg+0x106				/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/stream.go:1128
+#	0x100e1be	google.golang.org/grpc.(*clientStream).RecvMsg.func1+0x1e			/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/stream.go:982
+#	0x100ca99	google.golang.org/grpc.(*clientStream).withRetry+0x139				/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/stream.go:802
+#	0x100dfb4	google.golang.org/grpc.(*clientStream).RecvMsg+0x154				/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/stream.go:981
+#	0xfeb20a	google.golang.org/grpc.invoke+0xca						/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/call.go:73
+#	0xfeb0be	google.golang.org/grpc.(*ClientConn).Invoke+0x23e				/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/call.go:37
+#	0x1a65944	github.com/cosmos/cosmos-sdk/client.Context.Invoke+0x784			/root/go/pkg/mod/github.com/cosmos/cosmos-sdk@v0.53.5-0.20251030204916-768cb210885c/client/grpc_query.go:61
+#	0x2213627	github.com/cosmos/evm/x/vm/types.(*queryClient).Params+0xc7			/opt/integra-chain/x/vm/types/query.pb.go:1913
+#	0x27a5c91	github.com/cosmos/evm/rpc/backend.(*Backend).BlockNumber+0xb1			/opt/integra-chain/rpc/backend/blocks.go:28
+#	0x27ad69d	github.com/cosmos/evm/rpc/backend.(*Backend).getHeightByBlockNum+0x3d		/opt/integra-chain/rpc/backend/comet.go:94
+#	0x27acf78	github.com/cosmos/evm/rpc/backend.(*Backend).CometHeaderByNumber+0x38		/opt/integra-chain/rpc/backend/comet.go:39
+#	0x27a9c94	github.com/cosmos/evm/rpc/backend.(*Backend).DoCall+0xf4			/opt/integra-chain/rpc/backend/call_tx.go:388
+#	0x27c73ee	github.com/cosmos/evm/rpc/namespaces/ethereum/eth.(*PublicAPI).Call+0x1ae	/opt/integra-chain/rpc/namespaces/ethereum/eth/api.go:295
+#	0x4b7285	reflect.Value.call+0xca5							/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/reflect/value.go:584
+#	0x4b6398	reflect.Value.Call+0xb8								/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/reflect/value.go:368
+#	0xcc5e04	github.com/ethereum/go-ethereum/rpc.(*callback).call+0x364			/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/service.go:205
+#	0xcbeb7b	github.com/ethereum/go-ethereum/rpc.(*handler).runMethod+0x3b			/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:577
+#	0xcbe2a4	github.com/ethereum/go-ethereum/rpc.(*handler).handleCall+0x364			/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:519
+#	0xcbdaec	github.com/ethereum/go-ethereum/rpc.(*handler).handleCallMsg+0x22c		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:473
+#	0xcbc1e9	github.com/ethereum/go-ethereum/rpc.(*handler).handleNonBatchCall+0x189		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:299
+#	0xcbc044	github.com/ethereum/go-ethereum/rpc.(*handler).handleMsg.func1.1+0x24		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:272
+#	0xcbcdfa	github.com/ethereum/go-ethereum/rpc.(*handler).startCallProc.func1+0xba		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:390
+
+113 @ 0x479ace 0x455085 0xf9ebc8 0x100eefa 0x100eee7 0x100e1bf 0x100ca9a 0x100dfb5 0xfeb20b 0xfeb0bf 0x1a65945 0x2213628 0x27a5c92 0x27aa40a 0x27c7869 0x4b7286 0x4b6399 0xcc5e05 0xcbeb7c 0xcbe2a5 0xcbdaed 0xcbc1ea 0xcbc045 0xcbcdfb 0x4822a1
+#	0xf9ebc7	google.golang.org/grpc/internal/transport.(*ClientStream).waitOnHeader+0x67	/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/internal/transport/client_stream.go:92
+#	0x100eef9	google.golang.org/grpc/internal/transport.(*ClientStream).RecvCompress+0x119	/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/internal/transport/client_stream.go:107
+#	0x100eee6	google.golang.org/grpc.(*csAttempt).recvMsg+0x106				/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/stream.go:1128
+#	0x100e1be	google.golang.org/grpc.(*clientStream).RecvMsg.func1+0x1e			/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/stream.go:982
+#	0x100ca99	google.golang.org/grpc.(*clientStream).withRetry+0x139				/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/stream.go:802
+#	0x100dfb4	google.golang.org/grpc.(*clientStream).RecvMsg+0x154				/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/stream.go:981
+#	0xfeb20a	google.golang.org/grpc.invoke+0xca						/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/call.go:73
+#	0xfeb0be	google.golang.org/grpc.(*ClientConn).Invoke+0x23e				/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/call.go:37
+#	0x1a65944	github.com/cosmos/cosmos-sdk/client.Context.Invoke+0x784			/root/go/pkg/mod/github.com/cosmos/cosmos-sdk@v0.53.5-0.20251030204916-768cb210885c/client/grpc_query.go:61
+#	0x2213627	github.com/cosmos/evm/x/vm/types.(*queryClient).Params+0xc7			/opt/integra-chain/x/vm/types/query.pb.go:1913
+#	0x27a5c91	github.com/cosmos/evm/rpc/backend.(*Backend).BlockNumber+0xb1			/opt/integra-chain/rpc/backend/blocks.go:28
+#	0x27aa409	github.com/cosmos/evm/rpc/backend.(*Backend).ChainID+0x29			/opt/integra-chain/rpc/backend/chain_info.go:32
+#	0x27c7868	github.com/cosmos/evm/rpc/namespaces/ethereum/eth.(*PublicAPI).ChainId+0x48	/opt/integra-chain/rpc/namespaces/ethereum/eth/api.go:356
+#	0x4b7285	reflect.Value.call+0xca5							/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/reflect/value.go:584
+#	0x4b6398	reflect.Value.Call+0xb8								/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/reflect/value.go:368
+#	0xcc5e04	github.com/ethereum/go-ethereum/rpc.(*callback).call+0x364			/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/service.go:205
+#	0xcbeb7b	github.com/ethereum/go-ethereum/rpc.(*handler).runMethod+0x3b			/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:577
+#	0xcbe2a4	github.com/ethereum/go-ethereum/rpc.(*handler).handleCall+0x364			/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:519
+#	0xcbdaec	github.com/ethereum/go-ethereum/rpc.(*handler).handleCallMsg+0x22c		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:473
+#	0xcbc1e9	github.com/ethereum/go-ethereum/rpc.(*handler).handleNonBatchCall+0x189		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:299
+#	0xcbc044	github.com/ethereum/go-ethereum/rpc.(*handler).handleMsg.func1.1+0x24		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:272
+#	0xcbcdfa	github.com/ethereum/go-ethereum/rpc.(*handler).startCallProc.func1+0xba		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:390
+
+77 @ 0x479ace 0x40d77c 0x40d332 0x27b857e 0x27c5fe4 0x4b7286 0x4b6399 0xcc5e05 0xcbeb7c 0xcbe2a5 0xcbdaed 0xcbc1ea 0xcbc045 0xcbcdfb 0x4822a1
+#	0x27b857d	github.com/cosmos/evm/rpc/backend.(*Backend).GetTransactionReceipt+0x3fd			/opt/integra-chain/rpc/backend/tx_info.go:169
+#	0x27c5fe3	github.com/cosmos/evm/rpc/namespaces/ethereum/eth.(*PublicAPI).GetTransactionReceipt+0x183	/opt/integra-chain/rpc/namespaces/ethereum/eth/api.go:199
+#	0x4b7285	reflect.Value.call+0xca5									/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/reflect/value.go:584
+#	0x4b6398	reflect.Value.Call+0xb8										/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/reflect/value.go:368
+#	0xcc5e04	github.com/ethereum/go-ethereum/rpc.(*callback).call+0x364					/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/service.go:205
+#	0xcbeb7b	github.com/ethereum/go-ethereum/rpc.(*handler).runMethod+0x3b					/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:577
+#	0xcbe2a4	github.com/ethereum/go-ethereum/rpc.(*handler).handleCall+0x364					/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:519
+#	0xcbdaec	github.com/ethereum/go-ethereum/rpc.(*handler).handleCallMsg+0x22c				/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:473
+#	0xcbc1e9	github.com/ethereum/go-ethereum/rpc.(*handler).handleNonBatchCall+0x189				/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:299
+#	0xcbc044	github.com/ethereum/go-ethereum/rpc.(*handler).handleMsg.func1.1+0x24				/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:272
+#	0xcbcdfa	github.com/ethereum/go-ethereum/rpc.(*handler).startCallProc.func1+0xba				/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:390
+
+45 @ 0x479ace 0x455085 0xf9ebc8 0x100eefa 0x100eee7 0x100e1bf 0x100ca9a 0x100dfb5 0xfeb20b 0xfeb0bf 0x1a65945 0x2213768 0x27a9ee3 0x27c73ef 0x4b7286 0x4b6399 0xcc5e05 0xcbeb7c 0xcbe2a5 0xcbdaed 0xcbc1ea 0xcbc045 0xcbcdfb 0x4822a1
+#	0xf9ebc7	google.golang.org/grpc/internal/transport.(*ClientStream).waitOnHeader+0x67	/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/internal/transport/client_stream.go:92
+#	0x100eef9	google.golang.org/grpc/internal/transport.(*ClientStream).RecvCompress+0x119	/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/internal/transport/client_stream.go:107
+#	0x100eee6	google.golang.org/grpc.(*csAttempt).recvMsg+0x106				/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/stream.go:1128
+#	0x100e1be	google.golang.org/grpc.(*clientStream).RecvMsg.func1+0x1e			/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/stream.go:982
+#	0x100ca99	google.golang.org/grpc.(*clientStream).withRetry+0x139				/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/stream.go:802
+#	0x100dfb4	google.golang.org/grpc.(*clientStream).RecvMsg+0x154				/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/stream.go:981
+#	0xfeb20a	google.golang.org/grpc.invoke+0xca						/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/call.go:73
+#	0xfeb0be	google.golang.org/grpc.(*ClientConn).Invoke+0x23e				/root/go/pkg/mod/google.golang.org/grpc@v1.75.0/call.go:37
+#	0x1a65944	github.com/cosmos/cosmos-sdk/client.Context.Invoke+0x784			/root/go/pkg/mod/github.com/cosmos/cosmos-sdk@v0.53.5-0.20251030204916-768cb210885c/client/grpc_query.go:61
+#	0x2213767	github.com/cosmos/evm/x/vm/types.(*queryClient).EthCall+0xc7			/opt/integra-chain/x/vm/types/query.pb.go:1922
+#	0x27a9ee2	github.com/cosmos/evm/rpc/backend.(*Backend).DoCall+0x342			/opt/integra-chain/rpc/backend/call_tx.go:426
+#	0x27c73ee	github.com/cosmos/evm/rpc/namespaces/ethereum/eth.(*PublicAPI).Call+0x1ae	/opt/integra-chain/rpc/namespaces/ethereum/eth/api.go:295
+#	0x4b7285	reflect.Value.call+0xca5							/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/reflect/value.go:584
+#	0x4b6398	reflect.Value.Call+0xb8								/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/reflect/value.go:368
+#	0xcc5e04	github.com/ethereum/go-ethereum/rpc.(*callback).call+0x364			/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/service.go:205
+#	0xcbeb7b	github.com/ethereum/go-ethereum/rpc.(*handler).runMethod+0x3b			/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:577
+#	0xcbe2a4	github.com/ethereum/go-ethereum/rpc.(*handler).handleCall+0x364			/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:519
+#	0xcbdaec	github.com/ethereum/go-ethereum/rpc.(*handler).handleCallMsg+0x22c		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:473
+#	0xcbc1e9	github.com/ethereum/go-ethereum/rpc.(*handler).handleNonBatchCall+0x189		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:299
+#	0xcbc044	github.com/ethereum/go-ethereum/rpc.(*handler).handleMsg.func1.1+0x24		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:272
+#	0xcbcdfa	github.com/ethereum/go-ethereum/rpc.(*handler).startCallProc.func1+0xba		/root/go/pkg/mod/github.com/cosmos/go-ethereum@v1.16.2-cosmos-1/rpc/handler.go:390
+
+42 @ 0x479ace 0x456125 0x4560f4 0x47b485 0x49de7d 0xb015be 0xb015a3 0xb0027b 0xb06c05 0xb06ba6 0xb07452 0xb08113 0xb32b8c 0xb32b46 0xb3536b 0xb34952 0xb34f45 0xb12f8f 0xb13879 0x183b3c6 0x1e3f013 0x1ee73a7 0x1f84225 0x27ad028 0x27cc363 0x27ca4f2 0x4b7286 0x4b6399 0xcc5e05 0xcbeb7c 0xcbe2a5 0xcbdaed 0xcbb905 0xcbcdfb 0x4822a1
+#	0x47b484	sync.runtime_SemacquireMutex+0x24								/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/runtime/sema.go:95
+#	0x49de7c	sync.(*Mutex).lockSlow+0x15c									/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/sync/mutex.go:173
+#	0xb015bd	sync.(*Mutex).Lock+0x3d										/root/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.8.linux-amd64/src/sync/mutex.go:92
+#	0xb015a2	github.com/syndtr/goleveldb/leveldb/cache.(*lru).Promote+0x22					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/cache/lru.go:85
+#	0xb0027a	github.com/syndtr/goleveldb/leveldb/cache.(*Cache).Get+0x27a					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/cache/cache.go:399
+#	0xb06c04	github.com/syndtr/goleveldb/leveldb/cache.(*NamespaceGetter).Get+0xa4				/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/cache/cache.go:58
+#	0xb06ba5	github.com/syndtr/goleveldb/leveldb/table.(*Reader).readBlockCached+0x45			/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table/reader.go:625
+#	0xb07451	github.com/syndtr/goleveldb/leveldb/table.(*Reader).getIndexBlock+0x51				/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table/reader.go:712
+#	0xb08112	github.com/syndtr/goleveldb/leveldb/table.(*Reader).find+0x112					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table/reader.go:829
+#	0xb32b8b	github.com/syndtr/goleveldb/leveldb/table.(*Reader).Find+0x10b					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table/reader.go:922
+#	0xb32b45	github.com/syndtr/goleveldb/leveldb.(*tOps).find+0xc5						/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/table.go:450
+#	0xb3536a	github.com/syndtr/goleveldb/leveldb.(*version).get.func1+0x20a					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/version.go:180
+#	0xb34951	github.com/syndtr/goleveldb/leveldb.(*version).walkOverlapping+0x251				/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/version.go:128
+#	0xb34f44	github.com/syndtr/goleveldb/leveldb.(*version).get+0x2e4					/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/version.go:164
+#	0xb12f8e	github.com/syndtr/goleveldb/leveldb.(*DB).get+0x54e						/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/db.go:785
+#	0xb13878	github.com/syndtr/goleveldb/leveldb.(*DB).Get+0x138						/root/go/pkg/mod/github.com/syndtr/goleveldb@v1.0.1-0.20210819022825-2ae1ddf74ef7/leveldb/db.go:851
+#	0x183b3c5	github.com/cometbft/cometbft-db.(*GoLevelDB).Get+0x25						/root/go/pkg/mod/github.com/cometbft/cometbft-db@v0.14.1/goleveldb.go:48
+#	0x1e3f012	github.com/cometbft/cometbft/state.dbStore.LoadFinalizeBlockResponse+0xb2			/root/go/pkg/mod/github.com/cometbft/cometbft@v0.38.19/state/store.go:423
+#	0x1ee73a6	github.com/cometbft/cometbft/rpc/core.(*Environment).BlockResults+0x66				/root/go/pkg/mod/github.com/cometbft/cometbft@v0.38.19/rpc/core/blocks.go:190
+#	0x1f84224	github.com/cometbft/cometbft/rpc/client/local.(*Local).BlockResults+0x24			/root/go/pkg/mod/github.com/cometbft/cometbft@v0.38.19/rpc/client/local/local.go:168
+#	0x27ad027	github.com/cosmos/evm/rpc/backend.(*Backend).CometBlockResultByNumber+0x47			/opt/integra-chain/rpc/backend/comet.go:52
+#	0x27cc362	github.com/cosmos/evm/rpc/namespaces/ethereum/eth/filters.(*Filter).Logs+0x7c2			/opt/integra-chain/rpc/namespaces/ethereum/eth/filters/filters.go:180
+
+--- pprof on CometBFT (default 26660 / sometimes :6060 via [rpc] pprof_laddr) ---
+pprof_tm=000
+
+===== 10. DISK / CPU / SOCKETS =====
+--- iostat -x 1 5 ---
+Linux 6.8.0-106-generic (testnet-gateway) 	05/13/2026 	_x86_64_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          38.34    0.00   10.31    0.78    0.00   50.57
+
+Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+loop0            0.00      0.00     0.00   0.00    0.00     1.27    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+sda            310.32  11299.54     4.86   1.54    0.58    36.41  297.00   3344.37    50.60  14.56    0.45    11.26    0.12    114.86     0.00   0.00    0.83   936.33  132.04    0.25    0.35   9.11
+sdb              0.00      0.00     0.00   0.00    1.09    13.60    0.00      0.00     0.00   6.33    0.95     1.35    0.00      5.90     0.00   0.00    0.40 128718.44    0.00    0.18    0.00   0.00
+
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          93.33    0.00    5.28    0.13    0.00    1.26
+
+Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+loop0            0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+sda             87.00    972.00     7.00   7.45    0.31    11.17   68.00    376.00    20.00  22.73    2.19     5.53    0.00      0.00     0.00   0.00    0.00     0.00    6.00    0.17    0.18   2.50
+sdb              0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          88.50    0.00    8.75    0.50    0.00    2.25
+
+Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+loop0            0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+sda            482.00   5488.00     4.00   0.82    0.23    11.39   30.00    308.00     4.00  11.76    0.77    10.27    0.00      0.00     0.00   0.00    0.00     0.00    1.00    0.00    0.13   9.60
+sdb              0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          91.85    0.00    7.27    0.13    0.00    0.75
+
+Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+loop0            0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+sda            753.00   6524.00     0.00   0.00    0.21     8.66   55.00    244.00     4.00   6.78    1.84     4.44    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.26  15.10
+sdb              0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          90.30    0.00    6.05    0.25    0.00    3.40
+
+Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+loop0            0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+sda            123.00   1840.00     6.00   4.65    0.31    14.96    1.00      0.00     0.00   0.00    1.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    1.00    1.00    0.04   3.30
+sdb              0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+
+
+
+--- established sockets ---
+3524
+--- :26656 (p2p) listening + established ---
+5
+--- :26657 (rpc) ---
+88
+--- :8545 (evm rpc) ---
+12555
+--- :6065 / :8546 (ws) ---
+4
+
+=== END TS=20260513T122911Z ===
+Journal stashed at: /tmp/intgd-journal-20260513T122757Z.log
