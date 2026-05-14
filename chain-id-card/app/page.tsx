@@ -153,6 +153,26 @@ function NetworkToggle({
 }
 
 function StatusBadge({ status }: { status: string }) {
+  // Non-"Live" networks (e.g. mainnet, shut down 2026-05-14) must not render
+  // with the green "live" treatment — show a muted badge with a static dot.
+  const isLive = status.trim().toLowerCase() === "live";
+  if (!isLive) {
+    return (
+      <span
+        className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium"
+        style={{
+          backgroundColor: "var(--color-bg-elevated)",
+          color: "var(--color-text-muted)",
+        }}
+      >
+        <span
+          className="h-2 w-2 rounded-full"
+          style={{ backgroundColor: "var(--color-text-muted)" }}
+        />
+        {status}
+      </span>
+    );
+  }
   return (
     <span className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1.5 text-sm font-medium text-success">
       <span

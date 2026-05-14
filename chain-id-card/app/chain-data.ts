@@ -341,7 +341,9 @@ export const chainSpecs: Record<Network, ChainSpec> = {
     network: {
       chainId: "integra-1",
       evmChainId: 26217,
-      status: "Live",
+      // 2026-05-14: mainnet was shut down; only testnet (integra-testnet-1) is
+      // operational. Kept here as historical/reference for an eventual relaunch.
+      status: "Offline",
     },
     infrastructure: {
       validators: 4,
@@ -390,8 +392,10 @@ export const chainSpecs: Record<Network, ChainSpec> = {
       status: "Live",
     },
     infrastructure: {
-      validators: 4,
-      votingPowerEach: "25%",
+      // 2026-05-14: testnet runs 3 bonded validators (verified via
+      // /rpc/validators -> total:3). The 4th "Archive" entry was stale.
+      validators: 3,
+      votingPowerEach: "~33%",
       servers: [
         {
           name: "Testnet-Gateway",
@@ -410,12 +414,6 @@ export const chainSpecs: Record<Network, ChainSpec> = {
           role: "Signing-only Validator",
           provider: "DigitalOcean",
           location: "San Francisco, US",
-        },
-        {
-          name: "Archive",
-          role: "Archive + Validator",
-          provider: "AWS",
-          location: "Virginia, US",
         },
       ],
     },
