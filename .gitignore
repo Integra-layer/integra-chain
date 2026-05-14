@@ -34,6 +34,9 @@ evmd/build/
 
 build/
 
+# Stray local intgd binary (canonical build output is build/intgd, above)
+integra/intgd
+
 tests/systemtests/binaries
 tests/systemtests/testnet
 .testnets
