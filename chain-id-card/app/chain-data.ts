@@ -138,7 +138,7 @@ const sharedSpec = {
     bech32Prefix: "integra",
     homeDir: "~/.intgd",
     cosmosSDK: "v0.53.x",
-    evmFramework: "cosmos/evm v0.5.0",
+    evmFramework: "cosmos/evm v0.5.1",
     cometBFT: "v0.38.19",
   },
   token: {
@@ -147,14 +147,14 @@ const sharedSpec = {
     baseDenom: "airl",
     displayDenom: "IRL",
     decimals: 18,
-    totalSupply: "100,000,000,000 IRL",
+    totalSupply: "100,000,000,000 IRL (genesis; inflates 3%/yr)",
   },
   mint: {
     inflation: "3%",
     inflationMin: "3%",
     inflationMax: "3%",
     inflationRateChange: "0%",
-    goalBonded: "0%",
+    goalBonded: "1%",
     blocksPerYear: 6_311_520,
     blockTime: "~5 seconds",
   },
@@ -192,7 +192,7 @@ const sharedSpec = {
   },
   consensus: {
     maxBytes: "22,020,096 (21 MB)",
-    maxGas: "40,000,000",
+    maxGas: "-1 (unlimited)",
     evidenceMaxAge: "100,000 blocks (~48h)",
     evidenceMaxBytes: "1,048,576 (1 MB)",
   },
@@ -212,7 +212,7 @@ const sharedSpec = {
   },
   evm: {
     evmDenom: "airl",
-    extraEips: [5656, 1153, 6780],
+    extraEips: [],
     accessControlCreate: "Permissionless",
     accessControlCall: "Permissionless",
     historyServeWindow: 8192,

@@ -920,8 +920,12 @@ export default function Home() {
                 />
                 <Row
                   label="Extra EIPs"
-                  value={spec.evm.extraEips.join(", ")}
-                  tip="Additional Ethereum Improvement Proposals enabled: MCOPY (5656), Transient Storage (1153), SELFDESTRUCT changes (6780)"
+                  value={
+                    spec.evm.extraEips.length
+                      ? spec.evm.extraEips.join(", ")
+                      : "None"
+                  }
+                  tip="EIPs activated beyond the chain's standard hardfork set (x/vm extra_eips param)"
                 />
                 <Row
                   label="History Window"
