@@ -2,6 +2,10 @@
 
 Step-by-step guide to deploy Integra mainnet + testnet from scratch.
 
+> **Note (2026-05-14): Mainnet is currently shut down — only testnet is running.** This runbook is
+> retained as-is for reference and for an eventual mainnet relaunch; the mainnet phases below do
+> not reflect anything deployed today.
+
 **Prerequisites already done:**
 - integra-chain repo ready with custom genesis, Docker, ops scripts
 - `intgd` binary builds successfully (`make build`)

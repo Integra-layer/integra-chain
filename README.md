@@ -4,7 +4,10 @@ Integra Layer is an EVM-compatible Layer 1 blockchain built on the Cosmos SDK us
 
 ## Networks
 
-| Service | Mainnet | Testnet |
+> **Mainnet is currently shut down (as of 2026-05-14).** Only **testnet** is operational. The
+> mainnet rows below are kept for reference and will apply again when mainnet relaunches.
+
+| Service | Mainnet *(shut down)* | Testnet *(live)* |
 |---------|---------|---------|
 | RPC | `https://mainnet.integralayer.com/rpc` | `https://testnet.integralayer.com/rpc` |
 | REST | `https://mainnet.integralayer.com/api` | `https://testnet.integralayer.com/api` |
@@ -13,7 +16,7 @@ Integra Layer is an EVM-compatible Layer 1 blockchain built on the Cosmos SDK us
 | Blockscout | `https://blockscout.integralayer.com` | `https://testnet.blockscout.integralayer.com` |
 | Explorer | [scan.integralayer.com](https://scan.integralayer.com) | — |
 
-| Parameter | Mainnet | Testnet |
+| Parameter | Mainnet *(shut down)* | Testnet *(live)* |
 |-----------|---------|---------|
 | Chain ID | `integra_26217-1` | `integra_26218-1` |
 | EVM Chain ID | `26217` | `26218` |
