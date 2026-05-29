@@ -1,0 +1,49 @@
+name: validator-config-drift
+
+# Fails if the LIVE validator app.toml/config.toml drift from the checked-in baseline in
+# infra/validators/<node>/. Runs on PRs touching the baseline and on a daily schedule.
+#
+# Requires repo secret INTEGRA_VALIDATOR_SSH_KEY (a read-access SSH private key for the validators).
+# Without it the job skips (so forks / unprivileged runs don't fail) — set the secret to activate.
+
+on:
+  pull_request:
+    paths:
+      - "infra/validators/**"
+      - ".github/workflows/validator-config-drift.yml"
+  schedule:
+    - cron: "17 6 * * *"   # daily 06:17 UTC
+  workflow_dispatch: {}
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for SSH key secret
+        id: gate
+        env:
+          KEY: ${{ secrets.INTEGRA_VALIDATOR_SSH_KEY }}
+        run: |
+          if [ -z "${KEY:-}" ]; then
+            echo "::notice::INTEGRA_VALIDATOR_SSH_KEY not set — skipping live drift check (guard no-op)."
+            echo "active=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "active=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install SSH key
+        if: steps.gate.outputs.active == 'true'
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.INTEGRA_VALIDATOR_SSH_KEY }}" > ~/.ssh/integra
+          chmod 600 ~/.ssh/integra
+
+      - name: Run drift check
+        if: steps.gate.outputs.active == 'true'
+        env:
+          INTEGRA_SSH_KEY: /home/runner/.ssh/integra
+        run: |
+          chmod +x infra/validators/check-drift.sh
+          ./infra/validators/check-drift.sh

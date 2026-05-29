@@ -2,10 +2,10 @@
 
 Cosmos EVM Layer 1 blockchain for real-world asset tokenization.
 
-> **⚠️ STATUS (2026-05-14): Mainnet is shut down.** Only **testnet** (`integra-testnet-1`) is
-> currently operational. The mainnet sections below are kept as historical/reference material for
-> an eventual relaunch — they do **not** describe anything running today. When mainnet is brought
-> back, restore the "running" framing and re-verify every value (IPs, binary hash, validator set).
+> **Network status (verified 2026-05-29): only `integra-testnet-1` is operational.**
+> Mainnet is shut down and nothing mainnet runs on any host (`intgd-mainnet.service` and
+> `~/.intgd-mainnet` no longer exist anywhere). This file documents the **live testnet only**.
+> If mainnet is ever relaunched it is a separate, coordinated effort — re-derive every value then.
 
 **Repo**: `Integra-layer/integra-chain` (GitHub, branch: `main`)
 **Binary**: `intgd` (built from `integra/cmd/intgd`)
@@ -13,82 +13,187 @@ Cosmos EVM Layer 1 blockchain for real-world asset tokenization.
 
 ## Chain Info
 
-| | Mainnet *(shut down)* | Testnet *(live)* |
-|---|---|---|
-| Chain ID | `integra-1` | `integra-testnet-1` |
-| EVM Chain ID | `26217` | `26218` |
-| Token | IRL (`airl`, 18 decimals) | IRL (`airl`, 18 decimals) |
-| CometBFT | v0.38.19 | v0.38.19 |
-| Cosmos SDK | v0.53.5 | v0.53.5 |
-| Go | 1.23.8 | 1.23.8 |
+| | Testnet |
+|---|---|
+| Chain ID | `integra-testnet-1` |
+| EVM Chain ID | `26218` (hex `0x666a`) |
+| Token | IRL (`airl`, 18 decimals) |
+| CometBFT | v0.38.19 |
+| Cosmos SDK | v0.53.5 |
+| Go | 1.23.8 |
 
-*The Mainnet column is reference-only — mainnet is not running (see status note at the top).*
+The binary is built WITHOUT ldflags, so `intgd version` returns empty (`intgd version --long` shows
+the SDK/Go build info). Binary at `/usr/local/bin/intgd`; no cosmovisor.
 
-## Mainnet Binary *(shut down — historical reference)*
+## Validators (4 bonded + 1 jailed)
 
-- **Tag**: `v1.0.0` (commit `0e6a388`)
-- **MD5**: `9f9c240e0e9f12a04990034410625b84`
-- **All 4 validators run this identical binary** (SCP'd, not built independently)
-- The binary was built WITHOUT ldflags, so `intgd version` returns empty
+From `intgd query staking validators` + `curl localhost:26657/validators` (verified 2026-05-29).
+Total active voting power ≈ **651M**; the ⅔ quorum threshold ≈ **434M**.
 
-## Mainnet validators *(SHUT DOWN as of 2026-05-14 — none of these are running mainnet)*
-
-| Name | IP | Provider | Home Dir |
-|------|-----|----------|----------|
-| Integra-Gateway | 89.167.88.24 | Hetzner | `~/.intgd` |
-| Integra-Signer1 | 45.77.139.208 | Vultr | `~/.intgd-mainnet` |
-| Integra-Signer2 | 159.223.206.94 | DigitalOcean | `~/.intgd-mainnet` |
-| Integra-Archive | 3.208.92.57 | AWS | `~/.intgd` |
-
-**Mainnet is currently shut down — this table is historical.** When mainnet was live, Signer-1 and Signer-2 ran both testnet and mainnet on the same server, with mainnet at port offset +10000 (P2P 36656, RPC 36657, etc.). Those two hosts now run **only** the testnet `intgd.service` — the `intgd-mainnet.service` unit is stopped/removed and `~/.intgd-mainnet` is no longer in use.
-
-## Testnet validators (3 nodes, all bonded)
-
-| Moniker | Server hostname | IP | Provider | Home Dir | Role |
+| Moniker | Host / role | IP | Provider | ~VP | EVM RPC exposure |
 |---|---|---|---|---|---|
-| Integra-Helsinki | testnet-gateway | 46.225.231.81 | Hetzner | `~/.intgd` | **Public RPC origin (Caddy → localhost:8545)** |
-| Integra-Amsterdam | signer-1 | 45.77.139.208 | Vultr | `~/.intgd` | Validator (RPC bound to 127.0.0.1, EVM RPC `enable=false`) |
-| Integra-SantaClara | signer-2 | 159.223.206.94 | DigitalOcean | `~/.intgd` | Validator (RPC bound to 127.0.0.1, EVM RPC `enable=false`) |
+| **Integra-Helsinki** | testnet-gateway — **public RPC origin** + validator | 46.225.231.81 | Hetzner | ~200.3M | Caddy:443 → `localhost:8545` |
+| **Integra-Amsterdam** | signer-1 — validator | 45.77.139.208 | Vultr | ~200.3M | own Caddy `:8645` → `127.0.0.1:8545` (ufw-locked to explorer) |
+| **Integra-SantaClara** | signer-2 — validator | 159.223.206.94 | DigitalOcean | ~200.5M | own Caddy `:8645` → `127.0.0.1:8545` (ufw-locked to explorer) |
+| `integra-validator` | external validator (not Integra-operated) | ~`212.1.103.62` *(UNVERIFIED)* | — | ~50M | n/a |
+| `integralayer-local` | **jailed + unbonding** — NOT in the active set | — | — | ~0.06M | — |
 
-**Notes:**
-- Server hostnames (signer-1, signer-2, testnet-gateway) do not match validator monikers.
-- testnet.integralayer.com origin is **testnet-gateway (46.225.231.81)**. Caddy on this box reverse-proxies `localhost:8545` (EVM) and `localhost:26657` (Cometbft RPC) to the public hostname.
-- Daemon unit on every testnet host is `intgd.service` (bare `ExecStart=/usr/local/bin/intgd start`, no flags — so `app.toml` is canonical). With mainnet shut down, this is now the **only** `intgd` unit on each host. (When mainnet was live, signer-1/signer-2 also ran a separate `intgd-mainnet.service` with `--home /root/.intgd-mainnet --json-rpc.address 0.0.0.0:18545`.)
-- Slashing window is 10,000 blocks at 5% min-signed.
+**Notes**
+- Server hostnames (testnet-gateway, signer-1, signer-2) do **not** match the validator monikers
+  (Helsinki / Amsterdam / SantaClara).
+- **All three Integra nodes are validators (including the gateway).** The 4th bonded validator
+  (`integra-validator`, ~50M, external) is a deliberate **quorum cushion**: with 4 bonded
+  validators, taking any single ~200M Integra node offline still leaves ≈69% of voting power
+  online (> ⅔), so a node can be restarted without halting the chain.
+- Daemon unit on every host is `intgd.service` (bare `ExecStart=/usr/local/bin/intgd start`, no
+  flags → `app.toml` is canonical). intgd PIDs (2026-05-29): gateway `2647652`, signer-1 `14783`,
+  signer-2 `7187`. (These change on restart; don't hard-code them anywhere.)
+- Slashing window: **10,000 blocks at 5% min-signed**. A brief restart (missing ~tens of blocks)
+  is far within tolerance.
 
-**Testnet `app.toml` `[json-rpc]` non-default values (raised 2026-05-05 to unblock 22k-element view-call enumeration in IRWAWrapper):**
-- `gas-cap = 300000000` (was 25M)
-- `evm-timeout = "15s"` (was 5s)
+**Validator restart protocol** (any `app.toml`/config change that needs an `intgd` restart):
+1. Confirm all 4 validators are bonded + signing and the chain is producing blocks.
+2. Restart **one** node; wait for full recovery (`catching_up=false`, resumes signing) and confirm
+   the chain never stopped advancing.
+3. Only then move to the next. **NEVER restart two ~200M validators at once** — two big validators
+   down simultaneously drops below ⅔ and halts the chain.
 
-Backups at `~/.intgd/config/app.toml.bak.<unix-ts>`. Note: signer-1/signer-2 testnet EVM RPC has `enable = false`, so the gas-cap setting on those is dormant — only testnet-gateway actually serves the RPC.
+## RPC topology
+
+- **Public RPC origin = testnet-gateway** (46.225.231.81). Caddy:443 reverse-proxies
+  `/evm`,`/evm/*` → `localhost:8545`; `/rpc`,`/rpc/*` → `localhost:26657`; `/api*` →
+  `localhost:1317`; `/ws` → `localhost:8546`.
+- **Both signers also serve EVM RPC**: each runs its **own Caddy on `:8645`** → local
+  `intgd 127.0.0.1:8545` (json-rpc `enable=true` on the signers). `ufw` allows `:8645` from the
+  explorer (and a signer-1 status probe) only — **never public**.
+- **Internal RPC load balancer**: `rpc-internal.testnet.integralayer.com` — a Caddy vhost on the
+  explorer box, `@internal_only` (loopback + explorer + docker subnets, else `403`), `least_conn`
+  across **both signers:8645** with active health checks (`POST eth_blockNumber`, 15s). `ip_hash`
+  was removed after the 2026-05-26 outage (it pinned clients to a wedged signer).
+- **The explorer indexer and the explorer-UI `/evm` use the internal LB** (`rpc-internal`), NOT the
+  gateway, as of 2026-05-29 (see incident note below).
+
+**`app.toml` `[json-rpc]` per node:**
+
+| | Gateway | Signers (1 & 2) |
+|---|---|---|
+| `enable` | `true` | `true` |
+| `api` | `eth,net,web3` | `eth,net,web3` *(debug,txpool DROPPED 2026-05-29)* |
+| `gas-cap` | `300000000` | `50000000` |
+| `evm-timeout` | `15s` | `8s` |
+| `max-open-connections` | `600` *(was 0; bounded 2026-05-29)* | `200` *(was 0; bounded 2026-05-29)* |
+| `batch-request-limit` | `10` *(was 1000)* | `100` |
+| `batch-response-max-size` | `5000000` *(~5MB, was 25MB)* | `25000000` |
+| `block-range-cap` | `5000` *(was 10000)* | `2000` |
+| `[state-sync] snapshot-interval` | `0` *(was 1000; 2026-05-29)* | `0` |
+| bind (`address`) | `0.0.0.0:8545` (ufw-locked) | `127.0.0.1:8545` (behind Caddy `:8645`) |
+| `ws-address` | `127.0.0.1:8546` *(loopback, 2026-05-29)* | `127.0.0.1:8546` |
+| `[instrumentation] prometheus` | `true` @ `127.0.0.1:26660` | `true` @ `127.0.0.1:26660` |
+
+The gateway's `gas-cap=300000000` / `evm-timeout=15s` were raised (2026-05-05) to unblock a
+~22k-element view-call enumeration in `IRWAWrapper`. **Treat these as load-bearing — do not lower
+them** (it silently breaks that legitimate call, and any upstream proxy timeout must sit *above*
+the 15s ceiling). Backups: `~/.intgd/config/app.toml.bak.<unix-ts>`.
+
+## 2026-05-29 — EVM RPC flapping incident & fix
+
+- **Symptom:** `https://testnet.integralayer.com/evm` flapping DOWN with "Unexpected end of JSON
+  input" (a Caddy `504` returns an empty body, which the status monitor fails to JSON-parse).
+- **Root cause:** the Ethernal explorer was the dominant load on the **single** gateway intgd. Its
+  indexer (`workspaces.rpcServer`) pointed **directly at `http://46.225.231.81:8545`** — bypassing
+  every Caddy control — and its UI `/evm` proxied to the gateway too. Heavy queries saturated the
+  one node → `504` storms (~99.8% of recent 504s originated from the explorer IP). Amplified by the
+  gateway Caddy `response_header_timeout` having drifted to 25s.
+- **Fix (config/infra only — no consensus impact, no intgd restart):**
+  1. Repointed the explorer **indexer** (`workspaces.rpcServer`) and the explorer-UI `/evm` to
+     `https://rpc-internal.testnet.integralayer.com/evm` (the signer LB) — load now spreads across
+     both signers, off the single gateway.
+  2. Gateway Caddy `/evm` `response_header_timeout` 25s → **18s** (above intgd's 15s evm-timeout;
+     stuck slots recycle faster) — `read`/`write_timeout` left at 25s.
+  3. `intgd-throttle.service` **disabled** (its tighten-on-saturation logic backfires — keep off).
+- Full write-up + rollback: `docs/findings/2026-05-29-rpc-flapping-explorer-overload/`.
+
+## 2026-05-29 — permanent-fix run (config/architecture remediation, NOT bigger servers)
+
+Root cause of the recurring instability was **config/architecture/software, not capacity** (validators
+idle ≤25% CPU). All fixes below are verified; chain stayed healthy (all 4 signing, never halted).
+
+**Explorer (the load-48 fire):** created the missing index `idx_token_transfers_txid` on
+`token_transfers("transactionId")` (the 9.5M-row seq-scan per tx-detail query) → load **48→~2**;
+`shared_buffers` 256MB→4GB, `max_connections` 800→150, `work_mem`→16MB, `jit=off`; added **pgbouncer**
+(transaction pooling, `:6432`) and repointed all app DB conns through it. Home page 2.3s→~1s.
+**Never** use `docker compose ... --remove-orphans` here (kills integra-portal).
+
+**Validators (per-node, applied via the restart safety protocol, one node at a time):** dropped
+`debug,txpool` from the signer `api`; bounded `max-open-connections` (gw 600 / signers 200); gateway
+`batch-request-limit`→10, `batch-response-max-size`→5MB, `block-range-cap`→5000, `snapshot-interval`→0,
+WS bound to loopback; CometBFT prometheus on (loopback `:26660`); signer Caddy `:8645` transport
+hardened (`max_conns_per_host 150`, `response_header_timeout 12s`). Gateway `MemoryHigh` 12G→infinity
+(was causing 2M+ cgroup throttle events). Closed the latent gateway Caddy `/evm`→`:8545` door.
+
+**Hygiene/security:** ufw cleaned (gw del 5433/1317, deny 8546; signers del dead 26657/36656/36657);
+unattended-upgrades auto-reboot disabled on all validators (the 2026-05-28 near-halt cause); fixed the
+failed `logrotate` on all 4 hosts; removed dead `intgd-mainnet.service` units on the signers; secret
+files (`.env.integra` + backups) chmod 600.
+
+**Config drift control (root cause B):** the 3 validators' `app.toml`/`config.toml` are now checked into
+`infra/validators/` with `check-drift.sh` + a CI workflow (`.github/workflows/validator-config-drift.yml`).
+
+**Per-server docs:** `/root/SERVER.md` is maintained on all 4 boxes (created on the explorer).
+
+**DEFERRED / needs-credentials (NOT done — see the findings folder):**
+- Gateway **IAVL pruning spam — FIXED 2026-05-29** by setting gateway `[base] pruning="nothing"` (archive
+  mode) + restart → `version does not exist` spam now 0/min. (snapshot-interval=0 and an offline `intgd
+  prune` were both tried first and verified ineffective — the cause was the runtime pruning routine, not a
+  prune backlog.) Gateway now keeps full history. The `application.db`≈54G is **un-compacted goleveldb**
+  (NOT reclaimed by this; it grows gradually now) — an OPTIONAL **clean-store resync** (copy a compacted
+  signer's `~/.intgd/data`, keep this node's keys) reclaims it later. Disk fine (134G free, disk-guard
+  monitors). Reversible: `pruning="default"` + restart.
+- **Cloudflare edge (3L)** — **SKIPPED 2026-05-29** (decided after live testing): CF free **cannot** do
+  testnet-only (subdomain zones are Enterprise-only — `error 1116`; CNAME setup is Business $200/mo), and
+  the only free path is a **full apex-zone migration** of all 86 `integralayer.com` records (email + ~30
+  prod/dev apps) — declined (blast radius). The testnet is already hardened without CF. Do **not** move the
+  public origin onto the validator gateway (consensus risk). Full-migration runbook (if ever wanted) +
+  details in `docs/findings/.../ARCHITECTURE-EDGE-DECISION.md`.
+- **Telegram bot token** rotation via @BotFather (precautionary; files are now 0600).
+- Stale migration dumps (gw ~7.8G, explorer ~13G) + gateway idle docker/pm2 → clean after the
+  2026-06-15 rollback window.
+
+Full write-ups: `docs/findings/2026-05-29-rpc-flapping-explorer-overload/`
+(`INCIDENT.md`, `EXPLORER-OVERLOAD-PLAN.md`, `ARCHITECTURE-EDGE-DECISION.md`,
+`IAVL-PRUNING-AND-PROCESS-AUDIT.md`).
 
 ## Testnet block explorer (Ethernal)
 
-**As of 2026-05-14, the testnet explorer runs on its OWN dedicated server**, separate from any validator. This is the result of the migration that decommissioned the co-located explorer on testnet-gateway.
+Runs on its own dedicated server (migrated off testnet-gateway 2026-05-14).
 
 | | |
 |---|---|
-| Hostname | `Integra-testnet-explorer` |
-| IP | `91.99.208.48` |
-| Provider | Hetzner CCX23, fsn1-dc8 (Falkenstein) |
-| Resources | 4 dedicated EPYC vCPU / 16 GB / 160 GB NVMe / 4 GB swap |
-| Public URLs | `https://testnet.explorer.integralayer.com` and `https://admin.testnet.explorer.integralayer.com` (real Let's Encrypt cert) |
-| Stack | 9 Docker containers (Ethernal fork + Postgres + TimescaleDB + Redis + Soketi + pm2 indexer) |
+| Hostname / IP | `Integra-testnet-explorer` / `91.99.208.48` |
+| Provider | Hetzner CCX23, fsn1-dc8 (Falkenstein) — 4 EPYC vCPU / 16 GB / 160 GB NVMe |
+| Public URLs | `https://testnet.explorer.integralayer.com` + `https://admin.testnet.explorer.integralayer.com` (real Let's Encrypt cert) |
+| Stack | **12 Docker containers**: Ethernal frontend/backend, pm2 indexer, worker-{low,medium,high}, Postgres+TimescaleDB, Redis, Soketi, watchdog, plus co-located `integra-portal` and `integra-faucet` |
 | Config dir | `/opt/integra-explorer/` |
-| Compose | `docker compose -f /opt/integra-explorer/docker/docker-compose.integra.yml --env-file /opt/integra-explorer/docker/.env.integra ...` |
-| DB | Postgres 14 + TimescaleDB; `integra-explorer-postgres` container; database `ethernal`; volumes `docker_pgdata` (21 GB) + `docker_redisdata` |
-| Caddy | site blocks for both hostnames in `/etc/caddy/Caddyfile`; **no** `tls internal` (real LE cert); `/api/*` → 8890, `/app/*` → 6002, `/` → 3200; `/evm` reverse-proxies to `https://testnet.integralayer.com` (the public RPC, since this box has no local validator) |
+| DB | Postgres 14 + TimescaleDB; container `integra-explorer-postgres`; database `ethernal` |
+| Internal RPC LB | hosts the `rpc-internal.testnet.integralayer.com` Caddy vhost → both signers:8645 (least_conn + health checks) |
 | SSH | `ssh -i ~/.ssh/integra root@91.99.208.48` |
 
-**Important post-migration tunings (also baked in 2026-05-14, do NOT regress):**
-- Per-database statement timeout: `ALTER DATABASE ethernal SET statement_timeout = 90000` (raised from 30 s; the `countActiveWallets` SQL is ~30-45 s cold on 2.2 M tx).
-- 4 indexes restored after pg_dump-induced hypertable rebuild: `idx_transaction_events_workspace_to`, `transaction_events_workspaceId_from_idx`, `idx_token_transfer_events_workspace_src`, `idx_token_transfer_events_workspace_dst`.
-- `token_transfer_events.isReward boolean NOT NULL DEFAULT false` (was missing post-rebuild; caused worker INSERT crash loop on rewards; ~2.1 M existing rows backfilled from `token_transfers.isReward`).
-- Self-hosted stub `hasReachedTransactionQuota()` patched into `/opt/integra-explorer/run/models/explorer.js` (backup at `explorer.js.bak.pre-quota-stub`); needs an upstream PR.
+**Tunings to NOT regress** (baked 2026-05-14):
+- `ALTER DATABASE ethernal SET statement_timeout = 90000` (the `countActiveWallets` SQL is ~30-45s
+  cold on 2.2M tx).
+- 4 indexes restored after a pg_dump-induced hypertable rebuild: `idx_transaction_events_workspace_to`,
+  `transaction_events_workspaceId_from_idx`, `idx_token_transfer_events_workspace_src`,
+  `idx_token_transfer_events_workspace_dst`.
+- `token_transfer_events.isReward boolean NOT NULL DEFAULT false` (missing post-rebuild → worker
+  INSERT crash loop; ~2.1M rows backfilled).
+- Self-hosted stub `hasReachedTransactionQuota()` in `/opt/integra-explorer/run/models/explorer.js`
+  (backup `explorer.js.bak.pre-quota-stub`; needs an upstream PR).
 
-**Caddyfile-mutation gotcha (intgd-throttle.service):** the autoscaler on `testnet-gateway` (NOT on the explorer box) now expects **2** `max_conns_per_host` occurrences in `/etc/caddy/Caddyfile` (was 4 before the explorer blocks were removed during the 2026-05-14 decomm). The constant `EXPECTED_OCCURRENCES = 2` lives at line 68 of `/usr/local/bin/intgd-throttle.py` on testnet-gateway. Backup at `*.bak.pre-decomm.*`.
-
-**Rollback window:** the OLD explorer on testnet-gateway is `docker compose stop`'d (NOT `down`'d) with volumes preserved. To roll back, `cd /opt/integra-explorer && docker compose -f docker/docker-compose.integra.yml --env-file docker/.env.integra start` on 46.225.231.81 + restore the Caddyfile backup at `/etc/caddy/Caddyfile.bak.pre-explorer-removal.*` + flip DNS A records back (R53 hosted zone `Z07594511H8QLFFDPQYUJ`, two A records `testnet.explorer.integralayer.com` + `admin.testnet.explorer.integralayer.com`). Rollback window expires **2026-06-15** — after that the OLD volumes can be archived/removed by a deliberate operator.
+**Migration rollback window (expires 2026-06-15):** the OLD co-located explorer on testnet-gateway
+is `docker compose stop`'d (NOT `down`'d), volumes preserved. To roll back: `start` the old compose
+on 46.225.231.81 + restore `/etc/caddy/Caddyfile.bak.pre-explorer-removal.*` + flip the R53 A
+records (hosted zone `Z07594511H8QLFFDPQYUJ`: `testnet.explorer.integralayer.com` +
+`admin.testnet.explorer.integralayer.com`). After 2026-06-15 the old volumes may be archived.
 
 ## CRITICAL SAFETY RULES
 
@@ -100,15 +205,14 @@ A "State Machine Breaking" change is anything that alters how blocks are validat
 - Protobuf message changes that affect state
 - Precompile behavior changes
 
-If such a change is merged to `main` and a new validator builds from HEAD, their node will produce different state hashes and either:
-- Fall out of consensus (can't validate blocks)
-- Get slashed for double-signing (5% penalty, permanent removal)
+If such a change is merged to `main` and a validator builds from HEAD, their node will produce
+different state hashes and either fall out of consensus or get slashed for double-signing.
 
 **Process for consensus-breaking changes:**
-1. Create a new tagged release (e.g., `v1.1.0`)
-2. Submit a software upgrade governance proposal specifying the upgrade height
-3. ALL validators must upgrade their binary before that height
-4. Use the Cosmos SDK upgrade module (`x/upgrade`)
+1. Create a new tagged release.
+2. Submit a software-upgrade governance proposal specifying the upgrade height.
+3. ALL validators must upgrade their binary before that height.
+4. Use the Cosmos SDK upgrade module (`x/upgrade`).
 
 ### Never merge upstream cosmos/evm changes blindly
 
@@ -125,13 +229,13 @@ The Dockerfile pins `golang:1.23.8-alpine`. Do not change this without upgrading
 
 ### What CAN be changed safely (no binary upgrade needed)
 
-These are on-chain parameters changeable via governance proposal:
 - `minimum-gas-prices` (per-validator config, not even governance)
 - Base fee / fee market params (`x/feemarket`)
 - Staking params (unbonding period, max validators)
 - Governance params (voting period, deposit, quorum)
 - Slashing params (downtime window, jail duration)
 - ERC-20 registration settings
+- Per-node RPC/Caddy/firewall config (json-rpc knobs, timeouts, rate limits, ufw)
 
 Query current params: `intgd query params subspace <module> <key>`
 
@@ -141,7 +245,7 @@ Query current params: `intgd query params subspace <module> <key>`
 - New precompile contracts
 - New Cosmos SDK modules
 - Protobuf schema changes
-- Bug fixes in state machine logic
+- Bug fixes in state-machine logic
 
 ## Build
 
@@ -158,7 +262,7 @@ make test
 
 ## Key Directories
 
-- `integra/` — main app, cmd/intgd binary entry point
+- `integra/` — main app, `cmd/intgd` binary entry point
 - `x/` — Cosmos SDK custom modules
 - `precompiles/` — EVM precompiled contracts (staking, distribution, governance)
 - `docker/` — validator Docker setup (Dockerfile, wizard, lib.sh, tests)
@@ -168,32 +272,23 @@ make test
 
 ## Endpoints
 
-Working endpoints (testnet only — mainnet is shut down):
-- Testnet RPC: `https://testnet.integralayer.com/rpc`
-- Testnet EVM: `https://testnet.integralayer.com/evm`
+**Working (testnet — the only live network):**
+- Public RPC (CometBFT): `https://testnet.integralayer.com/rpc`
+- Public EVM JSON-RPC: `https://testnet.integralayer.com/evm`
+- Explorer: `https://testnet.explorer.integralayer.com` + `https://admin.testnet.explorer.integralayer.com`
+- Internal RPC LB: `https://rpc-internal.testnet.integralayer.com` (**internal only** — returns `403` externally)
 
-Offline — mainnet shut down (2026-05-14):
-- `mainnet.integralayer.com/rpc`
-- `mainnet.integralayer.com/evm`
-- `mainnet.integralayer.com/api`
-
-Dead endpoints (DO NOT USE):
-- `rpc.integralayer.com` — DOWN
-- `evm.integralayer.com` — DOWN
-- `ormos.integralayer.com` — DOWN
-- `grpc.integralayer.com` — DOWN
+**Dead — DO NOT USE:**
+- `rpc.integralayer.com`, `evm.integralayer.com`, `ormos.integralayer.com`, `grpc.integralayer.com`
+- All `mainnet.integralayer.com/*` (mainnet shut down)
 
 ## SSH Access
 
 ```bash
-# Testnet (the only live network)
 ssh -i ~/.ssh/integra root@46.225.231.81       # testnet-gateway (Integra-Helsinki, public RPC origin)
-ssh -i ~/.ssh/integra root@45.77.139.208       # signer-1 (Integra-Amsterdam, testnet validator)
-ssh -i ~/.ssh/integra root@159.223.206.94      # signer-2 (Integra-SantaClara, testnet validator)
-
-# Mainnet — SHUT DOWN (hosts listed for reference; nothing mainnet running on them)
-ssh -i ~/.ssh/integra root@89.167.88.24        # Gateway (mainnet — down)
-ssh -i ~/.ssh/integra-validator-key.pem ubuntu@3.208.92.57  # Archive (mainnet — down; different key + user)
+ssh -i ~/.ssh/integra root@45.77.139.208       # signer-1 (Integra-Amsterdam, validator + :8645 RPC)
+ssh -i ~/.ssh/integra root@159.223.206.94      # signer-2 (Integra-SantaClara, validator + :8645 RPC)
+ssh -i ~/.ssh/integra root@91.99.208.48        # explorer (Ethernal + rpc-internal LB + portal + faucet)
 ```
 
 ## Change Types (from .clconfig.json)
