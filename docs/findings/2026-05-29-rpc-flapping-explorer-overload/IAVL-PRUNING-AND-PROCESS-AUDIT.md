@@ -1,5 +1,17 @@
 # 2026-05-29 — Gateway IAVL pruning (deferred fix) + 4-server process audit
 
+> **RESOLVED 2026-05-30 — clean-store resync executed.** The gateway was resynced to a clean compacted store
+> copied from signer-2 (consistent snapshot via a brief `systemctl stop intgd` + `cp -a`, transferred over an
+> ephemeral SSH key, staged into `data.new` while the gateway kept running). In a short downtime window the
+> gateway was stopped, its OWN `priv_validator_key.json`/`node_key.json`/`priv_validator_state.json` were
+> preserved (the snapshot's `data/priv_validator_state.json` was overwritten with the gateway's own → no
+> double-sign), the data dir was swapped, `pruning` set `"nothing"→"default"`, and intgd restarted. It
+> blocksynced ~520 blocks (~48s), resumed signing, and the chain never halted. **Result:** `~/.intgd/data`
+> **88G→30G**, `application.db` 55G→21G, `version does not exist` spam **0/min** under `pruning="default"` on
+> the compacted store (so the runtime pruning routine works fine on a clean store — the bloat itself was the
+> problem, not the config). Binary parity (sha256) was verified between signer-2 and the gateway beforehand.
+> `data.old.*` was removed after the node was confirmed healthy. The gateway is no longer archive.
+
 ## A. Gateway IAVL bloat / pruning spam — REAL cause found (goal assumption was wrong)
 The goal expected `snapshot-interval=0` to "kill the per-block 'pruning version does not exist' spam +
 the IAVL bloat". **Verified false:** after setting `snapshot-interval=0` and restarting, the gateway

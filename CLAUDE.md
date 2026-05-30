@@ -146,13 +146,16 @@ files (`.env.integra` + backups) chmod 600.
 **Per-server docs:** `/root/SERVER.md` is maintained on all 4 boxes (created on the explorer).
 
 **DEFERRED / needs-credentials (NOT done — see the findings folder):**
-- Gateway **IAVL pruning spam — FIXED 2026-05-29** by setting gateway `[base] pruning="nothing"` (archive
-  mode) + restart → `version does not exist` spam now 0/min. (snapshot-interval=0 and an offline `intgd
-  prune` were both tried first and verified ineffective — the cause was the runtime pruning routine, not a
-  prune backlog.) Gateway now keeps full history. The `application.db`≈54G is **un-compacted goleveldb**
-  (NOT reclaimed by this; it grows gradually now) — an OPTIONAL **clean-store resync** (copy a compacted
-  signer's `~/.intgd/data`, keep this node's keys) reclaims it later. Disk fine (134G free, disk-guard
-  monitors). Reversible: `pruning="default"` + restart.
+- Gateway **IAVL pruning spam — RESOLVED.** Interim fix (2026-05-29) was `[base] pruning="nothing"` (archive)
+  which stopped the spam but left `application.db`≈55G un-compacted. **Clean-store resync DONE 2026-05-30:**
+  the gateway was resynced to a clean compacted store copied from signer-2 (consistent snapshot via a brief
+  stop+`cp`, transferred over an ephemeral key), the gateway's OWN consensus keys + `priv_validator_state.json`
+  were preserved (no double-sign), and `pruning` was restored to `"default"`. Result: `~/.intgd/data` **88G→30G**
+  (`application.db` 55G→21G), `version does not exist` spam stays **0/min** with `pruning="default"` on the
+  compacted store, and ~89G was reclaimed (old `data.old.*` removed after verification). The gateway is no
+  longer an archive node (keeps recent state, like the signers — historical-state EVM calls hit the pruning
+  horizon). Chain never halted; binary parity (signer-2↔gateway) was verified first. Runbook + details:
+  `IAVL-PRUNING-AND-PROCESS-AUDIT.md`.
 - **Cloudflare edge (3L)** — **SKIPPED 2026-05-29** (decided after live testing): CF free **cannot** do
   testnet-only (subdomain zones are Enterprise-only — `error 1116`; CNAME setup is Business $200/mo), and
   the only free path is a **full apex-zone migration** of all 86 `integralayer.com` records (email + ~30
@@ -280,6 +283,9 @@ make test
 - Public RPC (CometBFT): `https://testnet.integralayer.com/rpc`
 - Public EVM JSON-RPC: `https://testnet.integralayer.com/evm`
 - Explorer: `https://testnet.explorer.integralayer.com` + `https://admin.testnet.explorer.integralayer.com`
+- Status page: `https://status.integralayer.com` (**moved off validator signer-1 onto the explorer host
+  2026-05-30**; `integra-status.service` bound `127.0.0.1:3003` behind the explorer Caddy, manual deploy —
+  no unattended autopull on the validator anymore)
 - Internal RPC LB: `https://rpc-internal.testnet.integralayer.com` (**internal only** — returns `403` externally)
 
 **Dead — DO NOT USE:**
