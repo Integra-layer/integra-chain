@@ -1,5 +1,9 @@
 # Integra Chain
 
+> **Agents:** see [AGENTS.md](./AGENTS.md) for build commands, test commands, danger list, and
+> deploy flow. CLAUDE.md (this file) holds live operational state — validator topology, RPC
+> knobs, and incident notes. When the two files disagree, **this file (CLAUDE.md) wins.**
+
 Cosmos EVM Layer 1 blockchain for real-world asset tokenization.
 
 > **Network status (verified 2026-05-29): only `integra-testnet-1` is operational.**
